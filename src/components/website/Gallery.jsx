@@ -44,7 +44,7 @@ export default function Gallery() {
     {
       title: "Microscope Experiments",
       album: "Science Fair",
-      image: "https://images.unsplash.com/photo-1530210120071-08b58a8ffba4?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80",
       description: "Class 9 students examining plant cellular structures during biology class.",
     },
     {

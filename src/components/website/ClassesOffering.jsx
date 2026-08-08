@@ -42,6 +42,7 @@ export default function ClassesOffering() {
       grades: "Class 6 - 10",
       ageGroup: "11 - 15 Years",
       icon: <Layers className="h-6 w-6 text-cyan-400" />,
+      image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=600&q=80",
       colorClass: "from-slate-900 via-sky-950 to-blue-950 border-sky-900/60 text-white hover:border-cyan-400/50 hover:shadow-[0_0_30px_rgba(34,211,238,0.25)]",
       accentBg: "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30",
       description: "State Board curriculum focusing on analytical skills, board exam preparations, laboratory practices, and career orientation mentoring.",

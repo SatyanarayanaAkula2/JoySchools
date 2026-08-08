@@ -17,7 +17,7 @@ export default function Achievements() {
       category: "Academic Excellence",
       year: "2025 - 2026",
       icon: <Award className="h-5 w-5 text-accent" />,
-      image: "https://images.unsplash.com/photo-1530210120071-08b58a8ffba4?auto=format&fit=crop&w=500&q=80",
+      image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=500&q=80",
       description: "Two of our Class 10 students secured Top 50 national ranks in the National Science Olympiad, showcasing our strong emphasis on conceptual STEM learning.",
     },
     {
