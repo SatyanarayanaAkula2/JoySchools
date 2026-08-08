@@ -1,20 +1,20 @@
 import AdminLayoutWrapper from "@/components/admin/AdminLayoutWrapper";
-import StudentTable from "@/components/admin/StudentTable";
+import AchievementTable from "@/components/admin/AchievementTable";
 
 export const dynamic = "force-dynamic";
 
-export default function AdminStudentsPage() {
+export default function AdminAchievementsPage() {
   return (
-    <AdminLayoutWrapper title="Student Management">
+    <AdminLayoutWrapper title="School Achievements & Milestones">
       <div className="space-y-6">
         <div className="flex flex-col space-y-2">
           <p className="text-slate-455 dark:text-zinc-400 text-sm">
-            Add new registrations, update classes and profiles, or manage active student statuses.
+            Record and display academic accolades, sports victories, environmental awards, and co-curricular achievements. These display on the home landing page milestones section.
           </p>
         </div>
         
         {/* Render interactive table */}
-        <StudentTable />
+        <AchievementTable />
       </div>
     </AdminLayoutWrapper>
   );

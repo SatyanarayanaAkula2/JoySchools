@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { Mail, Award, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
-export default function Faculty() {
+export default function Faculty({ initialStaff }) {
   const scrollRef = useRef(null);
 
   const handleScroll = (direction) => {
@@ -19,7 +19,7 @@ export default function Faculty() {
     }
   };
 
-  const staff = [
+  const staff = initialStaff && initialStaff.length > 0 ? initialStaff : [
     {
       name: "Dr. Ramesh Prasad",
       role: "Principal",

@@ -3,7 +3,7 @@
 import { Award, Trophy, Leaf, Star, Calendar } from "lucide-react";
 import Image from "next/image";
 
-export default function Achievements() {
+export default function Achievements({ initialHighlights }) {
   const stats = [
     { value: "15+", label: "Years of Educational Legacy", icon: "🏫" },
     { value: "100%", label: "State Board Pass Rate", icon: "🎓" },
@@ -11,7 +11,7 @@ export default function Achievements() {
     { value: "2,200+", label: "Alumni Worldwide", icon: "🌐" },
   ];
 
-  const highlights = [
+  const highlights = initialHighlights && initialHighlights.length > 0 ? initialHighlights : [
     {
       title: "National Science Olympiad",
       category: "Academic Excellence",
@@ -37,6 +37,18 @@ export default function Achievements() {
       description: "Recognized by the Environmental Board for our zero-waste initiative, active student green club, and 100% solar-powered campus infrastructure.",
     },
   ];
+
+  const getIcon = (item) => {
+    if (item.icon) return item.icon;
+    const cat = item.category || "";
+    if (cat.toLowerCase().includes("sport") || cat.toLowerCase().includes("athletic")) {
+      return <Trophy className="h-5 w-5 text-accent" />;
+    }
+    if (cat.toLowerCase().includes("environment") || cat.toLowerCase().includes("eco") || cat.toLowerCase().includes("green") || cat.toLowerCase().includes("leaf")) {
+      return <Leaf className="h-5 w-5 text-accent" />;
+    }
+    return <Award className="h-5 w-5 text-accent" />;
+  };
 
   return (
     <section
@@ -128,7 +140,7 @@ export default function Achievements() {
                       Certified Milestone
                     </span>
                     <div className="p-2 rounded-lg bg-accent-light dark:bg-accent/10">
-                      {card.icon}
+                      {getIcon(card)}
                     </div>
                   </div>
                 </div>

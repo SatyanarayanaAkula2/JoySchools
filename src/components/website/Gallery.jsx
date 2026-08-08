@@ -4,13 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import { X, ChevronLeft, ChevronRight, Maximize2, Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
 
-export default function Gallery() {
+export default function Gallery({ initialItems }) {
   const [activeFilter, setActiveFilter] = useState("All");
   const [selectedImageIdx, setSelectedImageIdx] = useState(null);
 
   const albums = ["All", "Sports Meet", "Science Fair", "Cultural Fest", "Campus Life"];
 
-  const items = [
+  const items = initialItems && initialItems.length > 0 ? initialItems : [
     {
       title: "Annual Athletics Meet",
       album: "Sports Meet",

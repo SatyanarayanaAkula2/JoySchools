@@ -1,8 +1,21 @@
+import AdminLayoutWrapper from "@/components/admin/AdminLayoutWrapper";
+import EventTable from "@/components/admin/EventTable";
+
+export const dynamic = "force-dynamic";
+
 export default function AdminEventsPage() {
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4 font-display">Manage Events</h1>
-      <p>Add, edit, or remove school events, holidays, and activities calendar.</p>
-    </div>
+    <AdminLayoutWrapper title="School Events Calendar">
+      <div className="space-y-6">
+        <div className="flex flex-col space-y-2">
+          <p className="text-slate-455 dark:text-zinc-400 text-sm">
+            Publish school activities, holidays, exam schedules, and extracurricular co-curricular programs.
+          </p>
+        </div>
+        
+        {/* Render interactive table */}
+        <EventTable />
+      </div>
+    </AdminLayoutWrapper>
   );
 }
