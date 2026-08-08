@@ -1,14 +1,14 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import QuoteBanner from "@/components/QuoteBanner";
-import MissionVision from "@/components/MissionVision";
-import ClassesOffering from "@/components/ClassesOffering";
-import Faculty from "@/components/Faculty";
-import Activities from "@/components/Activities";
-import Achievements from "@/components/Achievements";
-import Gallery from "@/components/Gallery";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
+import Navbar from "@/components/website/Navbar";
+import Hero from "@/components/website/Hero";
+import QuoteBanner from "@/components/website/QuoteBanner";
+import MissionVision from "@/components/website/MissionVision";
+import ClassesOffering from "@/components/website/ClassesOffering";
+import Faculty from "@/components/website/Faculty";
+import Activities from "@/components/website/Activities";
+import Achievements from "@/components/website/Achievements";
+import Gallery from "@/components/website/Gallery";
+import Contact from "@/components/website/Contact";
+import Footer from "@/components/website/Footer";
 
 export default function Home() {
   return (
