@@ -25,12 +25,11 @@ export default function StudentForm({ student, onClose, onSave }) {
     }
   }, [student]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     const payload = {
-      _id: student?._id || `stud_${Math.random().toString(36).substr(2, 9)}`,
       name,
       className,
       rollNumber,
@@ -39,13 +38,20 @@ export default function StudentForm({ student, onClose, onSave }) {
       status,
     };
 
-    // Simulate network delay for premium visual loading states
-    setTimeout(() => {
-      onSave(payload);
+    if (student?._id) {
+      payload._id = student._id;
+    }
+
+    try {
+      await onSave(payload);
       onClose();
+    } catch (err) {
+      console.error(err);
+    } finally {
       setLoading(false);
-    }, 400);
+    }
   };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm">

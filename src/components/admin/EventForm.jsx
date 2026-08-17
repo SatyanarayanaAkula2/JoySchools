@@ -32,33 +32,44 @@ export default function EventForm({ event, onClose, onSave }) {
     }
   }, [event]);
 
+  const [imageFile, setImageFile] = useState(null);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setImageFile(file);
       const localUrl = URL.createObjectURL(file);
       setImagePreview(localUrl);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     const payload = {
-      _id: event?._id || `evt_${Math.random().toString(36).substr(2, 9)}`,
       title,
       description,
       date: new Date(date).toISOString(),
       category,
-      image: imagePreview || "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80",
+      imageFile,
+      existingImage: event?.image || "",
     };
 
-    setTimeout(() => {
-      onSave(payload);
+    if (event?._id) {
+      payload._id = event._id;
+    }
+
+    try {
+      await onSave(payload);
       onClose();
+    } catch (err) {
+      console.error(err);
+    } finally {
       setLoading(false);
-    }, 450);
+    }
   };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm">

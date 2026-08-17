@@ -5,81 +5,28 @@ import { Plus, Edit2, Trash2, Loader2, Mail, Award } from "lucide-react";
 import FacultyForm from "./FacultyForm";
 import Image from "next/image";
 
-const INITIAL_MOCK_FACULTY = [
-  {
-    _id: "fac_1",
-    name: "Dr. Ramesh Prasad",
-    role: "Principal",
-    qualification: "Ph.D. in Education, M.Sc. Physics",
-    experience: "22+ Years Experience",
-    image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&h=450&q=80",
-    email: "principal@joyemhighschool.edu",
-    order: 1,
-  },
-  {
-    _id: "fac_2",
-    name: "Mrs. Ananya Sen",
-    role: "Vice Principal & Math Lead",
-    qualification: "M.Sc. Mathematics, B.Ed.",
-    experience: "15+ Years Experience",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&h=450&q=80",
-    email: "ananya.s@joyemhighschool.edu",
-    order: 2,
-  },
-  {
-    _id: "fac_3",
-    name: "Mr. David Miller",
-    role: "Head of Science Department",
-    qualification: "M.Sc. Chemistry, M.Ed.",
-    experience: "12+ Years Experience",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&h=450&q=80",
-    email: "david.m@joyemhighschool.edu",
-    order: 3,
-  },
-  {
-    _id: "fac_4",
-    name: "Mrs. Sarah D'Souza",
-    role: "English Language Specialist",
-    qualification: "M.A. English Literature, B.Ed.",
-    experience: "10+ Years Experience",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&h=450&q=80",
-    email: "sarah.d@joyemhighschool.edu",
-    order: 4,
-  },
-  {
-    _id: "fac_5",
-    name: "Mrs. Priya Nair",
-    role: "Classes 1-5 Coordinator",
-    qualification: "M.A. Child Psychology, B.Ed.",
-    experience: "8+ Years Experience",
-    image: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=400&h=450&q=80",
-    email: "priya.n@joyemhighschool.edu",
-    order: 5,
-  },
-  {
-    _id: "fac_6",
-    name: "Mr. Rajesh Sharma",
-    role: "Physical Education Director",
-    qualification: "M.P.Ed. (Master of Physical Education)",
-    experience: "11+ Years Experience",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&h=450&q=80",
-    email: "rajesh.s@joyemhighschool.edu",
-    order: 6,
-  },
-];
-
 export default function FacultyTable() {
   const [facultyList, setFacultyList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedFaculty, setSelectedFaculty] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
+  // Initialize and load from Express backend
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setFacultyList(INITIAL_MOCK_FACULTY);
-      setLoading(false);
-    }, 450);
-    return () => clearTimeout(timer);
+    const loadFaculty = async () => {
+      try {
+        const response = await fetch("/api/faculty");
+        const data = await response.json();
+        if (data.success) {
+          setFacultyList(data.faculty || []);
+        }
+      } catch (err) {
+        console.error("Failed to load faculty:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadFaculty();
   }, []);
 
   // Sort faculty list by display priority index
@@ -92,22 +39,73 @@ export default function FacultyTable() {
     });
   }, [facultyList]);
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm("Are you sure you want to remove this faculty profile?")) {
-      setFacultyList((prev) => prev.filter((f) => f._id !== id));
+      try {
+        const response = await fetch(`/api/faculty/${id}`, { method: "DELETE" });
+        const res = await response.json();
+        if (res.success) {
+          setFacultyList((prev) => prev.filter((f) => f._id !== id));
+        } else {
+          alert(res.error || "Failed to delete faculty member");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to delete faculty member");
+      }
     }
   };
 
-  const handleSave = (savedFac) => {
-    setFacultyList((prev) => {
-      const exists = prev.some((f) => f._id === savedFac._id);
-      if (exists) {
-        return prev.map((f) => (f._id === savedFac._id ? savedFac : f));
+  const handleSave = async (savedFac) => {
+    try {
+      const isEdit = !!savedFac._id;
+      
+      const formData = new FormData();
+      formData.append("name", savedFac.name);
+      formData.append("role", savedFac.role);
+      formData.append("qualification", savedFac.qualification);
+      formData.append("experience", savedFac.experience);
+      formData.append("email", savedFac.email);
+      formData.append("order", savedFac.order);
+      
+      if (savedFac.imageFile) {
+        formData.append("imageFile", savedFac.imageFile);
       } else {
-        return [savedFac, ...prev];
+        formData.append("existingImage", savedFac.existingImage);
       }
-    });
+
+      let response;
+      if (isEdit) {
+        response = await fetch(`/api/faculty/${savedFac._id}`, {
+          method: "PUT",
+          body: formData,
+        });
+      } else {
+        response = await fetch("/api/faculty", {
+          method: "POST",
+          body: formData,
+        });
+      }
+      
+      const data = await response.json();
+      if (data.success) {
+        setFacultyList((prev) => {
+          if (isEdit) {
+            return prev.map((f) => (f._id === savedFac._id ? data.faculty : f));
+          } else {
+            return [data.faculty, ...prev];
+          }
+        });
+      } else {
+        alert(data.error || "Failed to save faculty member");
+        throw new Error(data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   };
+
 
   const handleEditClick = (fac) => {
     setSelectedFaculty(fac);

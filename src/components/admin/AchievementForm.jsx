@@ -24,33 +24,44 @@ export default function AchievementForm({ achievement, onClose, onSave }) {
     }
   }, [achievement]);
 
+  const [imageFile, setImageFile] = useState(null);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setImageFile(file);
       const localUrl = URL.createObjectURL(file);
       setImagePreview(localUrl);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     const payload = {
-      _id: achievement?._id || `ach_${Math.random().toString(36).substr(2, 9)}`,
       title,
       category,
       year,
       description,
-      image: imagePreview || "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=500&q=80",
+      imageFile,
+      existingImage: achievement?.image || "",
     };
 
-    setTimeout(() => {
-      onSave(payload);
+    if (achievement?._id) {
+      payload._id = achievement._id;
+    }
+
+    try {
+      await onSave(payload);
       onClose();
+    } catch (err) {
+      console.error(err);
+    } finally {
       setLoading(false);
-    }, 450);
+    }
   };
+
 
   const categories = [
     "Academic Excellence",

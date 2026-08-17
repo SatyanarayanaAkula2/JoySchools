@@ -5,51 +5,6 @@ import { Plus, Edit2, Trash2, Loader2, Image as ImageIcon, Filter } from "lucide
 import GalleryUploader from "./GalleryUploader";
 import Image from "next/image";
 
-const INITIAL_MOCK_GALLERY = [
-  {
-    _id: "gal_1",
-    title: "Annual Athletics Meet",
-    album: "Sports Meet",
-    image: "https://images.unsplash.com/photo-1567057419565-4349c49d8a04?auto=format&fit=crop&w=600&q=80",
-    description: "Students participating in track events during our Annual Sports Day.",
-  },
-  {
-    _id: "gal_2",
-    title: "Robotics Laboratory",
-    album: "Science Fair",
-    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80",
-    description: "Middle schoolers programming their line-following robots in our STEM lab.",
-  },
-  {
-    _id: "gal_3",
-    title: "Annual Cultural Dance",
-    album: "Cultural Fest",
-    image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=600&q=80",
-    description: "Traditional classical dance recital performed during the school's Anniversary.",
-  },
-  {
-    _id: "gal_4",
-    title: "JOY E.M HIGH SCHOOL Library",
-    album: "Campus Life",
-    image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=600&q=80",
-    description: "Our quiet reading room housing over 15,000 academic journals and books.",
-  },
-  {
-    _id: "gal_5",
-    title: "Inter-House Tug of War",
-    album: "Sports Meet",
-    image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=600&q=80",
-    description: "The final match of the Inter-House Athletics championship, displaying team spirit.",
-  },
-  {
-    _id: "gal_6",
-    title: "Microscope Experiments",
-    album: "Science Fair",
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80",
-    description: "Class 9 students examining plant cellular structures during biology class.",
-  },
-];
-
 export default function GalleryGrid() {
   const [items, setItems] = useState([]);
   const [albumFilter, setAlbumFilter] = useState("All");
@@ -57,12 +12,22 @@ export default function GalleryGrid() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
+  // Initialize and load from Express backend
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setItems(INITIAL_MOCK_GALLERY);
-      setLoading(false);
-    }, 450);
-    return () => clearTimeout(timer);
+    const loadGallery = async () => {
+      try {
+        const response = await fetch("/api/gallery");
+        const data = await response.json();
+        if (data.success) {
+          setItems(data.gallery || []);
+        }
+      } catch (err) {
+        console.error("Failed to load gallery items:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadGallery();
   }, []);
 
   // Filter gallery items locally
@@ -72,22 +37,70 @@ export default function GalleryGrid() {
     });
   }, [items, albumFilter]);
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm("Are you sure you want to delete this photo from the gallery?")) {
-      setItems((prev) => prev.filter((i) => i._id !== id));
+      try {
+        const response = await fetch(`/api/gallery/${id}`, { method: "DELETE" });
+        const res = await response.json();
+        if (res.success) {
+          setItems((prev) => prev.filter((i) => i._id !== id));
+        } else {
+          alert(res.error || "Failed to delete gallery item");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to delete gallery item");
+      }
     }
   };
 
-  const handleSave = (savedItem) => {
-    setItems((prev) => {
-      const exists = prev.some((i) => i._id === savedItem._id);
-      if (exists) {
-        return prev.map((i) => (i._id === savedItem._id ? savedItem : i));
+  const handleSave = async (savedItem) => {
+    try {
+      const isEdit = !!savedItem._id;
+      
+      const formData = new FormData();
+      formData.append("title", savedItem.title);
+      formData.append("description", savedItem.description || "");
+      formData.append("album", savedItem.album);
+      
+      if (savedItem.imageFile) {
+        formData.append("imageFile", savedItem.imageFile);
       } else {
-        return [savedItem, ...prev];
+        formData.append("existingImage", savedItem.existingImage);
       }
-    });
+
+      let response;
+      if (isEdit) {
+        response = await fetch(`/api/gallery/${savedItem._id}`, {
+          method: "PUT",
+          body: formData,
+        });
+      } else {
+        response = await fetch("/api/gallery", {
+          method: "POST",
+          body: formData,
+        });
+      }
+      
+      const data = await response.json();
+      if (data.success) {
+        setItems((prev) => {
+          if (isEdit) {
+            return prev.map((i) => (i._id === savedItem._id ? data.item : i));
+          } else {
+            return [data.item, ...prev];
+          }
+        });
+      } else {
+        alert(data.error || "Failed to save gallery item");
+        throw new Error(data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   };
+
 
   const handleEditClick = (item) => {
     setSelectedItem(item);

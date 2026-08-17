@@ -12,6 +12,7 @@ export default function FacultyForm({ faculty, onClose, onSave }) {
   const [email, setEmail] = useState("");
   const [order, setOrder] = useState(0);
   const [imagePreview, setImagePreview] = useState("");
+  const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const isEdit = !!faculty;
@@ -31,33 +32,42 @@ export default function FacultyForm({ faculty, onClose, onSave }) {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setImageFile(file);
       // Create local URL for browser render
       const localUrl = URL.createObjectURL(file);
       setImagePreview(localUrl);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     const payload = {
-      _id: faculty?._id || `fac_${Math.random().toString(36).substr(2, 9)}`,
       name,
       role,
       qualification,
       experience,
       email,
       order: Number(order) || 0,
-      image: imagePreview || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&h=450&q=80",
+      imageFile,
+      existingImage: faculty?.image || "",
     };
 
-    setTimeout(() => {
-      onSave(payload);
+    if (faculty?._id) {
+      payload._id = faculty._id;
+    }
+
+    try {
+      await onSave(payload);
       onClose();
+    } catch (err) {
+      console.error(err);
+    } finally {
       setLoading(false);
-    }, 450);
+    }
   };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm">

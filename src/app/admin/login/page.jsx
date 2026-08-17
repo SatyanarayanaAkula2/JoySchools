@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { loginAction } from "@/actions/auth.actions";
 import { School, Lock, User, Loader2 } from "lucide-react";
 
 export default function AdminLoginPage() {
@@ -18,7 +17,16 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const result = await loginAction({ username, password });
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      
+      const result = await response.json();
+      
       if (result.success) {
         // Success redirect
         router.push("/admin");
@@ -32,6 +40,7 @@ export default function AdminLoginPage() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">

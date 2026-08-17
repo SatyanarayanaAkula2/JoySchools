@@ -10,11 +10,6 @@ import Gallery from "@/components/website/Gallery";
 import Contact from "@/components/website/Contact";
 import Footer from "@/components/website/Footer";
 
-// Database operations
-import dbConnect from "@/lib/mongodb";
-import FacultyModel from "@/models/Faculty";
-import GalleryModel from "@/models/Gallery";
-import AchievementModel from "@/models/Achievement";
 
 export const dynamic = "force-dynamic";
 
@@ -24,21 +19,21 @@ export default async function Home() {
   let achievementData = [];
 
   try {
-    await dbConnect();
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
     
-    // Fetch values from MongoDB parallelly
-    const [rawFaculty, rawGallery, rawAchievements] = await Promise.all([
-      FacultyModel.find({}).sort({ order: 1, name: 1 }).lean(),
-      GalleryModel.find({}).sort({ createdAt: -1 }).lean(),
-      AchievementModel.find({}).sort({ createdAt: -1 }).lean(),
+    const [resFaculty, resGallery, resAchievements] = await Promise.all([
+      fetch(`${backendUrl}/api/faculty`, { cache: "no-store" }).then((r) => r.json()),
+      fetch(`${backendUrl}/api/gallery`, { cache: "no-store" }).then((r) => r.json()),
+      fetch(`${backendUrl}/api/achievements`, { cache: "no-store" }).then((r) => r.json()),
     ]);
 
-    facultyData = JSON.parse(JSON.stringify(rawFaculty));
-    galleryData = JSON.parse(JSON.stringify(rawGallery));
-    achievementData = JSON.parse(JSON.stringify(rawAchievements));
+    facultyData = resFaculty.faculty || [];
+    galleryData = resGallery.gallery || [];
+    achievementData = resAchievements.achievements || [];
   } catch (error) {
-    console.warn("Failed to load homepage dynamic records, using placeholders:", error);
+    console.warn("Failed to load homepage dynamic records from Express backend, using placeholders:", error);
   }
+
 
   return (
     <div className="flex flex-col min-h-screen">

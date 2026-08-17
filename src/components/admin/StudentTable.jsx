@@ -4,13 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Search, Edit2, Trash2, Filter, UserPlus, Loader2 } from "lucide-react";
 import StudentForm from "./StudentForm";
 
-const INITIAL_MOCK_STUDENTS = [
-  { _id: "stud_1", name: "Rahul Prasad", className: "10A", rollNumber: "12", guardianName: "Sanjay Prasad", guardianPhone: "+91 98765 43210", status: "Active" },
-  { _id: "stud_2", name: "Priya Nair", className: "10B", rollNumber: "08", guardianName: "Madhavan Nair", guardianPhone: "+91 94567 12345", status: "Active" },
-  { _id: "stud_3", name: "Aarav Sharma", className: "9A", rollNumber: "24", guardianName: "Rajesh Sharma", guardianPhone: "+91 90123 45678", status: "Active" },
-  { _id: "stud_4", name: "Neha Sen", className: "10A", rollNumber: "15", guardianName: "Subhasish Sen", guardianPhone: "+91 91234 56789", status: "Inactive" },
-  { _id: "stud_5", name: "Kunal Roy", className: "8B", rollNumber: "03", guardianName: "Amit Roy", guardianPhone: "+91 88765 43210", status: "Active" },
-];
+
 
 export default function StudentTable() {
   const [students, setStudents] = useState([]);
@@ -20,13 +14,22 @@ export default function StudentTable() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  // Initialize with mock students list
+  // Initialize and load from Express backend
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setStudents(INITIAL_MOCK_STUDENTS);
-      setLoading(false);
-    }, 450); // Small loading state for realism
-    return () => clearTimeout(timer);
+    const loadStudents = async () => {
+      try {
+        const response = await fetch("/api/students");
+        const data = await response.json();
+        if (data.success) {
+          setStudents(data.students || []);
+        }
+      } catch (err) {
+        console.error("Failed to load students:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadStudents();
   }, []);
 
   // Filter students locally in memory
@@ -38,24 +41,59 @@ export default function StudentTable() {
     });
   }, [students, search, classFilter]);
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm("Are you sure you want to delete this student registration?")) {
-      setStudents((prev) => prev.filter((s) => s._id !== id));
+      try {
+        const response = await fetch(`/api/students/${id}`, { method: "DELETE" });
+        const res = await response.json();
+        if (res.success) {
+          setStudents((prev) => prev.filter((s) => s._id !== id));
+        } else {
+          alert(res.error || "Failed to delete student registration");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to delete student registration");
+      }
     }
   };
 
-  const handleSave = (savedStudent) => {
-    setStudents((prev) => {
-      const exists = prev.some((s) => s._id === savedStudent._id);
-      if (exists) {
-        // Edit update
-        return prev.map((s) => (s._id === savedStudent._id ? savedStudent : s));
+  const handleSave = async (savedStudent) => {
+    try {
+      const isEdit = !!savedStudent._id;
+      let response;
+      if (isEdit) {
+        response = await fetch(`/api/students/${savedStudent._id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(savedStudent),
+        });
       } else {
-        // Add new
-        return [savedStudent, ...prev];
+        response = await fetch("/api/students", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(savedStudent),
+        });
       }
-    });
+      const data = await response.json();
+      if (data.success) {
+        setStudents((prev) => {
+          if (isEdit) {
+            return prev.map((s) => (s._id === savedStudent._id ? data.student : s));
+          } else {
+            return [data.student, ...prev];
+          }
+        });
+      } else {
+        alert(data.error || "Failed to save student details");
+        throw new Error(data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   };
+
 
   const handleEditClick = (student) => {
     setSelectedStudent(student);

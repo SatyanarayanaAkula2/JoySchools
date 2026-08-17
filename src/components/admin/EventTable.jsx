@@ -5,41 +5,6 @@ import { Plus, Edit2, Trash2, Loader2, Calendar, Image as ImageIcon, Filter } fr
 import EventForm from "./EventForm";
 import Image from "next/image";
 
-const INITIAL_MOCK_EVENTS = [
-  {
-    _id: "evt_1",
-    title: "Independence Day Festivities",
-    description: "Annual flag hoisting ceremony, cultural dance recitals, and student debate matches on campus.",
-    date: new Date("2026-08-15").toISOString(),
-    category: "Holiday",
-    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    _id: "evt_2",
-    title: "National Science Olympiad",
-    description: "Middle and high school students present physics and chemistry concepts in our STEM laboratories.",
-    date: new Date("2026-09-05").toISOString(),
-    category: "Academic",
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    _id: "evt_3",
-    title: "Inter-House Football League",
-    description: "Matches held at the campus sports field. Families are invited to attend and cheer for houses.",
-    date: new Date("2026-09-12").toISOString(),
-    category: "Sports",
-    image: "https://images.unsplash.com/photo-1544698310-74ea9d1c8258?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    _id: "evt_4",
-    title: "Fine Arts Recital Show",
-    description: "Student music classes and classical dance groups showcase seasonal choreography.",
-    date: new Date("2026-10-02").toISOString(),
-    category: "Co-curricular",
-    image: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?auto=format&fit=crop&w=800&q=80",
-  },
-];
-
 export default function EventTable() {
   const [events, setEvents] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState("All");
@@ -47,12 +12,22 @@ export default function EventTable() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
+  // Initialize and load from Express backend
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setEvents(INITIAL_MOCK_EVENTS);
-      setLoading(false);
-    }, 450);
-    return () => clearTimeout(timer);
+    const loadEvents = async () => {
+      try {
+        const response = await fetch("/api/events");
+        const data = await response.json();
+        if (data.success) {
+          setEvents(data.events || []);
+        }
+      } catch (err) {
+        console.error("Failed to load events:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadEvents();
   }, []);
 
   // Filter events in memory
@@ -64,22 +39,71 @@ export default function EventTable() {
       .sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort chronologically
   }, [events, categoryFilter]);
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm("Are you sure you want to delete this event from the calendar?")) {
-      setEvents((prev) => prev.filter((e) => e._id !== id));
+      try {
+        const response = await fetch(`/api/events/${id}`, { method: "DELETE" });
+        const res = await response.json();
+        if (res.success) {
+          setEvents((prev) => prev.filter((e) => e._id !== id));
+        } else {
+          alert(res.error || "Failed to delete calendar event");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to delete calendar event");
+      }
     }
   };
 
-  const handleSave = (savedEvent) => {
-    setEvents((prev) => {
-      const exists = prev.some((e) => e._id === savedEvent._id);
-      if (exists) {
-        return prev.map((e) => (e._id === savedEvent._id ? savedEvent : e));
+  const handleSave = async (savedEvent) => {
+    try {
+      const isEdit = !!savedEvent._id;
+      
+      const formData = new FormData();
+      formData.append("title", savedEvent.title);
+      formData.append("description", savedEvent.description);
+      formData.append("date", savedEvent.date);
+      formData.append("category", savedEvent.category);
+      
+      if (savedEvent.imageFile) {
+        formData.append("imageFile", savedEvent.imageFile);
       } else {
-        return [savedEvent, ...prev];
+        formData.append("existingImage", savedEvent.existingImage);
       }
-    });
+
+      let response;
+      if (isEdit) {
+        response = await fetch(`/api/events/${savedEvent._id}`, {
+          method: "PUT",
+          body: formData,
+        });
+      } else {
+        response = await fetch("/api/events", {
+          method: "POST",
+          body: formData,
+        });
+      }
+      
+      const data = await response.json();
+      if (data.success) {
+        setEvents((prev) => {
+          if (isEdit) {
+            return prev.map((e) => (e._id === savedEvent._id ? data.event : e));
+          } else {
+            return [data.event, ...prev];
+          }
+        });
+      } else {
+        alert(data.error || "Failed to save calendar event");
+        throw new Error(data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   };
+
 
   const handleEditClick = (event) => {
     setSelectedEvent(event);

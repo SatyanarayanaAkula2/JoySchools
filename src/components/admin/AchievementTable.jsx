@@ -5,63 +5,95 @@ import { Plus, Edit2, Trash2, Loader2, Trophy } from "lucide-react";
 import AchievementForm from "./AchievementForm";
 import Image from "next/image";
 
-const INITIAL_MOCK_ACHIEVEMENTS = [
-  {
-    _id: "ach_1",
-    title: "National Science Olympiad",
-    category: "Academic Excellence",
-    year: "2025 - 2026",
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=500&q=80",
-    description: "Two of our Class 10 students secured Top 50 national ranks in the National Science Olympiad, showcasing our strong emphasis on conceptual STEM learning.",
-  },
-  {
-    _id: "ach_2",
-    title: "State Basketball Champions",
-    category: "Sports & Athletics",
-    year: "2025",
-    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=500&q=80",
-    description: "Our Under-16 basketball team bagged the gold medal at the State Level Inter-School Sports Meet, maintaining our undefeated streak for the season.",
-  },
-  {
-    _id: "ach_3",
-    title: "Eco-School of the Year",
-    category: "Environmental Leadership",
-    year: "2024 - 2025",
-    image: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=500&q=80",
-    description: "Recognized by the Environmental Board for our zero-waste initiative, active student green club, and 100% solar-powered campus infrastructure.",
-  },
-];
-
 export default function AchievementTable() {
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedAchievement, setSelectedAchievement] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
+  // Initialize and load from Express backend
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setAchievements(INITIAL_MOCK_ACHIEVEMENTS);
-      setLoading(false);
-    }, 450);
-    return () => clearTimeout(timer);
+    const loadAchievements = async () => {
+      try {
+        const response = await fetch("/api/achievements");
+        const data = await response.json();
+        if (data.success) {
+          setAchievements(data.achievements || []);
+        }
+      } catch (err) {
+        console.error("Failed to load achievements:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadAchievements();
   }, []);
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm("Are you sure you want to delete this achievement record?")) {
-      setAchievements((prev) => prev.filter((a) => a._id !== id));
+      try {
+        const response = await fetch(`/api/achievements/${id}`, { method: "DELETE" });
+        const res = await response.json();
+        if (res.success) {
+          setAchievements((prev) => prev.filter((a) => a._id !== id));
+        } else {
+          alert(res.error || "Failed to delete achievement");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to delete achievement");
+      }
     }
   };
 
-  const handleSave = (savedAch) => {
-    setAchievements((prev) => {
-      const exists = prev.some((a) => a._id === savedAch._id);
-      if (exists) {
-        return prev.map((a) => (a._id === savedAch._id ? savedAch : a));
+  const handleSave = async (savedAch) => {
+    try {
+      const isEdit = !!savedAch._id;
+      
+      const formData = new FormData();
+      formData.append("title", savedAch.title);
+      formData.append("category", savedAch.category);
+      formData.append("year", savedAch.year);
+      formData.append("description", savedAch.description);
+      
+      if (savedAch.imageFile) {
+        formData.append("imageFile", savedAch.imageFile);
       } else {
-        return [savedAch, ...prev];
+        formData.append("existingImage", savedAch.existingImage);
       }
-    });
+
+      let response;
+      if (isEdit) {
+        response = await fetch(`/api/achievements/${savedAch._id}`, {
+          method: "PUT",
+          body: formData,
+        });
+      } else {
+        response = await fetch("/api/achievements", {
+          method: "POST",
+          body: formData,
+        });
+      }
+      
+      const data = await response.json();
+      if (data.success) {
+        setAchievements((prev) => {
+          if (isEdit) {
+            return prev.map((a) => (a._id === savedAch._id ? data.achievement : a));
+          } else {
+            return [data.achievement, ...prev];
+          }
+        });
+      } else {
+        alert(data.error || "Failed to save achievement");
+        throw new Error(data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   };
+
 
   const handleEditClick = (achievement) => {
     setSelectedAchievement(achievement);

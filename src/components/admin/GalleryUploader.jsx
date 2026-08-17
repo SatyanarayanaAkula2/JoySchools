@@ -23,19 +23,22 @@ export default function GalleryUploader({ item, onClose, onSave }) {
     }
   }, [item]);
 
+  const [imageFile, setImageFile] = useState(null);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setImageFile(file);
       const localUrl = URL.createObjectURL(file);
       setImagePreview(localUrl);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!isEdit && !imagePreview) {
+    if (!isEdit && !imageFile) {
       setError("Please select an image file to upload.");
       return;
     }
@@ -43,19 +46,28 @@ export default function GalleryUploader({ item, onClose, onSave }) {
     setLoading(true);
 
     const payload = {
-      _id: item?._id || `gal_${Math.random().toString(36).substr(2, 9)}`,
       title,
       description,
       album,
-      image: imagePreview || "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=600&q=80",
+      imageFile,
+      existingImage: item?.image || "",
     };
 
-    setTimeout(() => {
-      onSave(payload);
+    if (item?._id) {
+      payload._id = item._id;
+    }
+
+    try {
+      await onSave(payload);
       onClose();
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Failed to save gallery item.");
+    } finally {
       setLoading(false);
-    }, 450);
+    }
   };
+
 
   const albums = ["Sports Meet", "Science Fair", "Cultural Fest", "Campus Life"];
 
