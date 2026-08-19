@@ -29,20 +29,33 @@ const PORT = process.env.PORT || 5000;
 
 // Enable CORS
 const allowedOrigins = [
-  process.env.FRONTEND_URL || "http://localhost:3000",
+  process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL?.replace(/\/$/, ""),
   "http://localhost:3000",
   "http://127.0.0.1:3000",
-];
+  "https://joy-schools.vercel.app",
+].filter(Boolean);
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      // allow requests with no origin (like mobile apps or curl requests)
+      // allow requests with no origin (like mobile apps, server-to-server or curl requests)
       if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = "The CORS policy for this site does not allow access from the specified Origin.";
-        return callback(new Error(msg), false);
+
+      const normalizedOrigin = origin.replace(/\/$/, "");
+      
+      const isAllowed = 
+        allowedOrigins.includes(normalizedOrigin) ||
+        normalizedOrigin.endsWith(".vercel.app") ||
+        normalizedOrigin.includes("vercel.app");
+
+      if (isAllowed) {
+        return callback(null, true);
       }
-      return callback(null, true);
+
+      console.warn(`Blocked by CORS policy. Origin: ${origin}`);
+      const msg = "The CORS policy for this site does not allow access from the specified Origin.";
+      return callback(new Error(msg), false);
     },
     credentials: true,
   })
