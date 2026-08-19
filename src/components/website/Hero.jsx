@@ -63,16 +63,6 @@ export default function Hero({ slideImages }) {
               Empowering Minds, <br className="hidden sm:inline" />
               <span className="text-accent drop-shadow-[0_2px_8px_rgba(255,255,255,0.9)]">Shaping Futures</span>
             </h1>
-
-            {/* Tagline */}
-            <p className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white max-w-2xl drop-shadow-[0_1px_4px_rgba(255,255,255,0.9)]">
-              Where curiosity meets discovery, and every child finds their path.
-            </p>
-
-            {/* Supporting Sentence */}
-            <p className="text-base sm:text-lg text-slate-900 dark:text-slate-200 leading-relaxed max-w-xl font-semibold drop-shadow-[0_1px_4px_rgba(255,255,255,0.8)]">
-              From Nursery to Class 10, JOY E.M HIGH SCHOOL offers a nurturing, State Board curriculum designed to foster academic excellence, creative thinking, and strong values.
-            </p>
           </div>
 
           {/* Right Image/Illustration Column */}
