@@ -43,6 +43,10 @@ const SettingSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    mapEmbedUrl: {
+      type: String,
+      default: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.9265147814876!2d77.62193527589999!3d12.976594214751433!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1680d22c0389%3A0x7d028b030e427187!2sBengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin",
+    },
   },
   { timestamps: true }
 );
