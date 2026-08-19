@@ -28,18 +28,18 @@ export default function MilestonesSection({ stats }) {
           <div className="h-1 w-16 bg-accent-light mx-auto rounded-full mt-3" />
         </div>
 
-        {/* Centered Milestone Cards */}
-        <div className="flex flex-wrap justify-center items-stretch gap-6 max-w-6xl mx-auto">
+        {/* Fully Centered Milestone Cards */}
+        <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-8 max-w-5xl mx-auto w-full text-center">
           {statList.map((stat, idx) => (
             <div
               key={idx}
-              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] min-w-[220px] max-w-[280px] p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 text-center shadow-lg hover:bg-white/15 hover:scale-105 transition-all duration-300 flex flex-col justify-center items-center"
+              className="w-full sm:w-64 max-w-[280px] p-7 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 text-center shadow-lg hover:bg-white/15 hover:scale-105 transition-all duration-300 flex flex-col justify-center items-center shrink-0"
             >
-              <div className="text-3xl mb-2">{stat.icon}</div>
-              <div className="font-display text-3xl sm:text-4xl font-black text-white">
+              <div className="text-4xl mb-3">{stat.icon}</div>
+              <div className="font-display text-4xl sm:text-5xl font-black text-white mb-2">
                 {stat.value}
               </div>
-              <div className="text-xs sm:text-sm font-bold text-white/80 mt-1 uppercase tracking-wide">
+              <div className="text-xs sm:text-sm font-bold text-white/90 uppercase tracking-wider leading-snug">
                 {stat.label}
               </div>
             </div>
