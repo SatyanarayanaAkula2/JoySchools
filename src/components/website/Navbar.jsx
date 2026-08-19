@@ -51,9 +51,10 @@ export default function Navbar() {
     { name: "Home", href: "#hero", id: "hero" },
     { name: "About Us", href: "#about", id: "about" },
     { name: "Academics", href: "#classes", id: "classes" },
-    // { name: "Faculty", href: "#faculty", id: "faculty" },
-    { name: "Activities", href: "#activities", id: "activities" },
+    { name: "Holistic Programs", href: "#activities", id: "activities" },
+    { name: "Events", href: "#events", id: "events" },
     { name: "Achievements", href: "#achievements", id: "achievements" },
+    { name: "Milestones", href: "#milestones", id: "milestones" },
     { name: "Gallery", href: "#gallery", id: "gallery" },
     { name: "Contact", href: "#contact", id: "contact" },
   ];

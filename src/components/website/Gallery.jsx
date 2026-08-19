@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { X, ChevronLeft, ChevronRight, Maximize2, Image as ImageIcon } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 import Image from "next/image";
 
 export default function Gallery({ initialItems }) {
   const [selectedImageIdx, setSelectedImageIdx] = useState(null);
+  const scrollRef = useRef(null);
 
-  const items = initialItems && initialItems.length > 0 ? initialItems : [
+  const defaultItems = [
     {
       title: "Annual Athletics Meet",
       album: "Sports Meet",
@@ -44,33 +45,28 @@ export default function Gallery({ initialItems }) {
       image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80",
       description: "Class 9 students examining plant cellular structures during biology class.",
     },
-    {
-      title: "Student Painting Exhibition",
-      album: "Cultural Fest",
-      image: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=600&q=80",
-      description: "Watercolor and oil sketches displayed at the Annual Spring Art Showcase.",
-    },
-    {
-      title: "Computer Coding Class",
-      album: "Campus Life",
-      image: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=600&q=80",
-      description: "Primary students learning logical coding foundations using educational programming suites.",
-    },
   ];
 
-  // Filter items: only pictures with a name (title) should be displayed
-  const filteredItems = items.filter(item => item.title && item.title.trim() !== "");
+  const items = initialItems && initialItems.length > 0 ? initialItems : defaultItems;
+  const filteredItems = items.filter((item) => item.title && item.title.trim() !== "");
+
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const { scrollLeft, clientWidth } = scrollRef.current;
+      const scrollAmount = clientWidth * 0.8;
+      scrollRef.current.scrollTo({
+        left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   const handlePrev = useCallback(() => {
-    setSelectedImageIdx((prev) => 
-      prev === 0 ? filteredItems.length - 1 : prev - 1
-    );
+    setSelectedImageIdx((prev) => (prev === 0 ? filteredItems.length - 1 : prev - 1));
   }, [filteredItems]);
 
   const handleNext = useCallback(() => {
-    setSelectedImageIdx((prev) => 
-      prev === filteredItems.length - 1 ? 0 : prev + 1
-    );
+    setSelectedImageIdx((prev) => (prev === filteredItems.length - 1 ? 0 : prev + 1));
   }, [filteredItems]);
 
   // Close lightbox on escape key
@@ -94,38 +90,58 @@ export default function Gallery({ initialItems }) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
-          <h2 className="font-display text-sm font-bold text-accent uppercase tracking-widest">
-            Visual Tour
-          </h2>
-          <p className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
-            Life at JOY E.M HIGH SCHOOL
-          </p>
-          <div className="h-1 w-16 bg-accent mx-auto rounded-full" />
-          <p className="text-base sm:text-lg text-foreground/70 dark:text-foreground/85">
-            A glimpse into the daily activities, student initiatives, sports competitions, and campus highlights that make our school a joyful community.
-          </p>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div className="max-w-2xl space-y-3">
+            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
+              Life at JOY E.M HIGH SCHOOL
+            </h2>
+            <div className="h-1 w-16 bg-accent rounded-full" />
+            <p className="text-base sm:text-lg text-foreground/70 dark:text-foreground/85">
+              A glimpse into the daily campus life, student initiatives, sports competitions, and cultural celebrations.
+            </p>
+          </div>
+
+          {/* Slide Controls */}
+          <div className="flex items-center gap-2 self-start md:self-end shrink-0">
+            <button
+              onClick={() => scroll("left")}
+              className="p-3 rounded-full bg-white dark:bg-zinc-800 shadow-md border border-slate-200/60 dark:border-zinc-700 text-slate-700 dark:text-slate-200 hover:bg-accent hover:text-white transition-all"
+              aria-label="Previous"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              onClick={() => scroll("right")}
+              className="p-3 rounded-full bg-white dark:bg-zinc-800 shadow-md border border-slate-200/60 dark:border-zinc-700 text-slate-700 dark:text-slate-200 hover:bg-accent hover:text-white transition-all"
+              aria-label="Next"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
-
-        {/* Gallery Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {/* 1-Row Horizontal Slide Bar */}
+        <div
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scrollbar-none scroll-smooth"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
           {filteredItems.map((item, idx) => (
             <div
               key={idx}
               onClick={() => setSelectedImageIdx(idx)}
-              className="group relative aspect-[4/3] rounded-2xl overflow-hidden border border-primary/5 bg-white dark:bg-primary-dark/15 shadow-sm hover:shadow-xl hover:border-accent/40 cursor-pointer transition-all duration-300 animate-scale-up"
+              className="w-[280px] sm:w-[320px] md:w-[350px] shrink-0 snap-center group relative aspect-[4/3] rounded-3xl overflow-hidden border border-slate-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm hover:shadow-xl hover:border-accent/40 cursor-pointer transition-all duration-300"
             >
               <Image
                 src={item.image}
                 alt={item.title}
                 fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                sizes="(max-width: 768px) 280px, 350px"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
               {/* Overlay and hover maximize icon */}
-              <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/85 via-primary-dark/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
-                <div className="absolute top-4 right-4 p-2 bg-white/20 rounded-lg text-white backdrop-blur-sm">
+              <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/90 via-primary-dark/35 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                <div className="absolute top-4 right-4 p-2.5 bg-white/20 rounded-xl text-white backdrop-blur-sm shadow-md">
                   <Maximize2 className="h-4 w-4" />
                 </div>
                 <div className="space-y-1">
@@ -143,7 +159,10 @@ export default function Gallery({ initialItems }) {
 
         {/* Lightbox Modal */}
         {selectedImageIdx !== null && (
-          <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+          <div
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/90 backdrop-blur-md p-4"
+            onClick={() => setSelectedImageIdx(null)}
+          >
             {/* Top Bar inside modal */}
             <div className="absolute top-4 right-4 z-[110] flex gap-4">
               <button
@@ -157,14 +176,20 @@ export default function Gallery({ initialItems }) {
 
             {/* Navigation Controls */}
             <button
-              onClick={handlePrev}
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePrev();
+              }}
               className="absolute left-4 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all focus:outline-none z-10"
               title="Previous"
             >
               <ChevronLeft className="h-6 w-6" />
             </button>
             <button
-              onClick={handleNext}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleNext();
+              }}
               className="absolute right-4 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all focus:outline-none z-10"
               title="Next"
             >
@@ -180,33 +205,28 @@ export default function Gallery({ initialItems }) {
                 src={filteredItems[selectedImageIdx].image}
                 alt={filteredItems[selectedImageIdx].title}
                 fill
-                sizes="90vw"
-                className="object-contain rounded-lg border border-white/10"
-                priority
+                sizes="85vw"
+                className="object-contain"
               />
             </div>
 
-            {/* Bottom details */}
+            {/* Caption in Lightbox */}
             <div
-              className="mt-6 text-center max-w-2xl px-4 text-white z-10"
+              className="mt-6 text-center max-w-2xl px-4 z-10"
               onClick={(e) => e.stopPropagation()}
             >
-              <span className="text-xs font-bold text-accent uppercase tracking-wider">
+              <span className="text-xs font-bold text-accent uppercase tracking-widest block mb-1">
                 {filteredItems[selectedImageIdx].album}
               </span>
-              <h3 className="font-display text-xl font-bold mt-1 text-white">
+              <h3 className="font-display text-xl sm:text-2xl font-extrabold text-white">
                 {filteredItems[selectedImageIdx].title}
               </h3>
-              <p className="text-sm text-gray-300 mt-2">
-                {filteredItems[selectedImageIdx].description}
-              </p>
-              <div className="text-xs text-gray-400 mt-3 font-semibold">
-                Image {selectedImageIdx + 1} of {filteredItems.length}
-              </div>
+              {filteredItems[selectedImageIdx].description && (
+                <p className="text-sm text-slate-300 mt-2">
+                  {filteredItems[selectedImageIdx].description}
+                </p>
+              )}
             </div>
-
-            {/* Background click to close */}
-            <div className="absolute inset-0 z-[-1]" onClick={() => setSelectedImageIdx(null)} />
           </div>
         )}
       </div>

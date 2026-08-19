@@ -3,13 +3,13 @@ import Hero from "@/components/website/Hero";
 import QuoteBanner from "@/components/website/QuoteBanner";
 import MissionVision from "@/components/website/MissionVision";
 import ClassesOffering from "@/components/website/ClassesOffering";
-import Faculty from "@/components/website/Faculty";
 import Activities from "@/components/website/Activities";
+import EventsSection from "@/components/website/EventsSection";
 import Achievements from "@/components/website/Achievements";
+import MilestonesSection from "@/components/website/MilestonesSection";
 import Gallery from "@/components/website/Gallery";
 import Contact from "@/components/website/Contact";
 import Footer from "@/components/website/Footer";
-
 
 export const dynamic = "force-dynamic";
 
@@ -43,39 +43,40 @@ export default async function Home() {
     console.warn("Failed to load homepage dynamic records from Express backend, using placeholders:", error);
   }
 
-
   return (
     <div className="flex flex-col min-h-screen">
       {/* Sticky Navbar at the top of the viewport */}
       <Navbar />
 
       <main className="flex-grow">
-        {/* Hero Section */}
+        {/* 1. Hero Section */}
         <Hero slideImages={settingsData.heroSlides} />
 
-        {/* Inspirational Quote Banner */}
+        {/* 2. Inspirational Quote Banner */}
         <QuoteBanner />
 
-        {/* About: Mission & Vision */}
+        {/* 3. About: Mission & Vision */}
         <MissionVision adminImage={settingsData.adminImage} />
 
-        {/* Academics: Curriculum & Classes */}
+        {/* 4. Academics: Curriculum & Classes */}
         <ClassesOffering />
 
-        {/* Mentor Directory: Faculty Members (Dynamic) (Hidden for future use)
-        <Faculty initialStaff={facultyData} />
-        */}
+        {/* 5. Holistic Development Programs (Co-curriculars, sports, arts) */}
+        <Activities />
 
-        {/* Co-curriculars: Clubs & Sports */}
-        <Activities initialEvents={eventData} />
+        {/* 6. Events & Dates Calendar Section */}
+        <EventsSection initialEvents={eventData} />
 
-        {/* Milestones: Achievements Dashboard (Dynamic) */}
-        <Achievements initialHighlights={achievementData} initialStats={milestoneData} />
+        {/* 7. Honors & Achievements */}
+        <Achievements initialHighlights={achievementData} />
 
-        {/* Media Tour: Event Photo Gallery (Dynamic) */}
+        {/* 8. Legacy Milestones (Right BEFORE Gallery) */}
+        <MilestonesSection initialStats={milestoneData} />
+
+        {/* 9. Visual Media Gallery Tour */}
         <Gallery initialItems={galleryData} />
 
-        {/* Inquiry Hub: Contact Details and Form */}
+        {/* 10. Inquiry Hub: Admissions & Contact Form */}
         <Contact settings={settingsData} />
       </main>
 

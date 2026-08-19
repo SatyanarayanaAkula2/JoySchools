@@ -1,17 +1,13 @@
 "use client";
 
-import { Award, Trophy, Leaf, Star, Calendar } from "lucide-react";
+import { useRef } from "react";
+import { Award, Trophy, Leaf, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
-export default function Achievements({ initialHighlights, initialStats }) {
-  const stats = initialStats && initialStats.length > 0 ? initialStats : [
-    { value: "15+", label: "Years of Educational Legacy", icon: "🏫" },
-    { value: "100%", label: "State Board Pass Rate", icon: "🎓" },
-    { value: "35+", label: "Sports & Cultural Trophies", icon: "🏆" },
-    { value: "2,200+", label: "Alumni Worldwide", icon: "🌐" },
-  ];
+export default function Achievements({ initialHighlights }) {
+  const scrollRef = useRef(null);
 
-  const highlights = initialHighlights && initialHighlights.length > 0 ? initialHighlights : [
+  const fallbackHighlights = [
     {
       title: "National Science Olympiad",
       category: "Academic Excellence",
@@ -38,6 +34,19 @@ export default function Achievements({ initialHighlights, initialStats }) {
     },
   ];
 
+  const highlights = initialHighlights && initialHighlights.length > 0 ? initialHighlights : fallbackHighlights;
+
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const { scrollLeft, clientWidth } = scrollRef.current;
+      const scrollAmount = clientWidth * 0.8;
+      scrollRef.current.scrollTo({
+        left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
   const getIcon = (item) => {
     if (item.icon) return item.icon;
     const cat = item.category || "";
@@ -53,100 +62,97 @@ export default function Achievements({ initialHighlights, initialStats }) {
   return (
     <section
       id="achievements"
-      className="py-20 bg-slate-50/80 dark:bg-background border-y border-slate-200/60"
+      className="py-20 bg-gradient-to-br from-slate-100/60 via-primary-light/5 to-transparent dark:from-background dark:via-primary-dark/5 dark:to-transparent"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="font-display text-sm font-bold text-accent uppercase tracking-widest">
-            Milestones
-          </h2>
-          <p className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
-            Our Proudest Achievements
-          </p>
-          <div className="h-1 w-16 bg-accent mx-auto rounded-full" />
-          <p className="text-base sm:text-lg text-foreground/70 dark:text-foreground/85">
-            Through continuous effort and dedication, our students and staff continue to reach new heights in academic, athletic, and environmental categories.
-          </p>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div className="max-w-2xl space-y-3">
+            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
+              Honors & Achievements
+            </h2>
+            <div className="h-1 w-16 bg-accent rounded-full" />
+            <p className="text-base sm:text-lg text-foreground/70 dark:text-foreground/85">
+              Celebrating our students&apos; national awards, state athletic championships, and environmental honors.
+            </p>
+          </div>
+
+          {/* Slide Controls */}
+          <div className="flex items-center gap-2 self-start md:self-end shrink-0">
+            <button
+              onClick={() => scroll("left")}
+              className="p-3 rounded-full bg-white dark:bg-zinc-800 shadow-md border border-slate-200/60 dark:border-zinc-700 text-slate-700 dark:text-slate-200 hover:bg-accent hover:text-white transition-all"
+              aria-label="Previous"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              onClick={() => scroll("right")}
+              className="p-3 rounded-full bg-white dark:bg-zinc-800 shadow-md border border-slate-200/60 dark:border-zinc-700 text-slate-700 dark:text-slate-200 hover:bg-accent hover:text-white transition-all"
+              aria-label="Next"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
-        {/* Stats Strip */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20 max-w-6xl mx-auto">
-          {stats.map((stat, idx) => (
+        {/* 1-Row Horizontal Slide Bar */}
+        <div
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scrollbar-none scroll-smooth"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {highlights.map((card, idx) => (
             <div
               key={idx}
-              className="p-6 rounded-2xl bg-gradient-to-br from-primary-light/50 to-white dark:from-primary-dark/10 dark:to-transparent border border-primary/5 text-center shadow-sm hover:shadow-md hover:border-primary/10 transition-all duration-300"
+              className="w-[300px] sm:w-[350px] md:w-[380px] shrink-0 snap-center group relative rounded-3xl overflow-hidden border border-slate-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900/90 shadow-sm hover:shadow-xl hover:border-accent/40 transition-all duration-300 flex flex-col justify-between"
             >
-              <div className="text-3xl mb-2">{stat.icon}</div>
-              <div className="font-display text-3xl sm:text-4xl font-black text-primary dark:text-accent">
-                {stat.value}
+              {/* Image Area with category badge */}
+              <div className="relative aspect-[16/10] overflow-hidden">
+                <Image
+                  src={card.image}
+                  alt={card.title}
+                  fill
+                  sizes="(max-width: 768px) 300px, 380px"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+
+                {/* Category Badge */}
+                <span className="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md dark:bg-accent dark:text-primary-dark">
+                  {card.category}
+                </span>
               </div>
-              <div className="text-xs sm:text-sm font-bold text-foreground/60 dark:text-foreground/80 mt-1 uppercase tracking-wide">
-                {stat.label}
+
+              {/* Content details */}
+              <div className="p-6 flex flex-col justify-between flex-grow space-y-3">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-foreground/60 dark:text-foreground/75">
+                    <Calendar className="h-3.5 w-3.5 text-accent" />
+                    <span>{card.year}</span>
+                  </div>
+
+                  <h4 className="font-display text-xl font-bold text-primary dark:text-white group-hover:text-accent transition-colors duration-200">
+                    {card.title}
+                  </h4>
+
+                  <p className="text-sm text-foreground/70 dark:text-foreground/80 leading-relaxed">
+                    {card.description}
+                  </p>
+                </div>
+
+                {/* Footer icon */}
+                <div className="pt-4 border-t border-slate-100 dark:border-zinc-800 mt-4 flex justify-between items-center">
+                  <span className="text-xs font-semibold text-foreground/50 dark:text-foreground/60">
+                    Recognized Accolade
+                  </span>
+                  <div className="p-2 rounded-lg bg-accent/10">
+                    {getIcon(card)}
+                  </div>
+                </div>
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Highlights Section */}
-        <div className="space-y-6 max-w-6xl mx-auto">
-          <h3 className="font-display text-2xl font-bold text-primary dark:text-white text-center mb-10">
-            Recent Recognition Highlights
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {highlights.map((card, idx) => (
-              <div
-                key={idx}
-                className="group relative rounded-2xl overflow-hidden border border-primary/10 bg-white dark:bg-primary-dark/15 shadow-sm hover:shadow-xl hover:border-accent/40 hover:-translate-y-2 transition-all duration-300 flex flex-col h-full"
-              >
-                {/* Image Area with category badge */}
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <Image
-                    src={card.image}
-                    alt={card.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-
-                  {/* Category Badge */}
-                  <span className="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md dark:bg-accent dark:text-primary-dark">
-                    {card.category}
-                  </span>
-                </div>
-
-                {/* Content details */}
-                <div className="p-6 flex flex-col justify-between flex-grow">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-foreground/60 dark:text-foreground/75">
-                      <Calendar className="h-3.5 w-3.5 text-accent" />
-                      <span>{card.year}</span>
-                    </div>
-
-                    <h4 className="font-display text-xl font-bold text-primary dark:text-white group-hover:text-accent transition-colors duration-200">
-                      {card.title}
-                    </h4>
-
-                    <p className="text-sm text-foreground/70 dark:text-foreground/80 leading-relaxed">
-                      {card.description}
-                    </p>
-                  </div>
-
-                  {/* Footer icon */}
-                  <div className="pt-5 border-t border-primary/5 mt-5 flex justify-between items-center">
-                    <span className="text-xs font-semibold text-foreground/50 dark:text-foreground/60">
-                      Certified Milestone
-                    </span>
-                    <div className="p-2 rounded-lg bg-accent-light dark:bg-accent/10">
-                      {getIcon(card)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </section>

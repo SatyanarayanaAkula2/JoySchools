@@ -75,8 +75,11 @@ export default function ClassesOffering() {
           </p>
         </div>
 
-        {/* Programs Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {/* Programs Single-Row Slide Bar */}
+        <div
+          className="flex overflow-x-auto gap-8 pb-6 pt-2 snap-x snap-mandatory scrollbar-none justify-start lg:justify-center max-w-6xl mx-auto"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
           {classesData.map((item, idx) => (
             <div
               key={idx}
@@ -87,7 +90,7 @@ export default function ClassesOffering() {
                 }
               }}
               title="Double-click to open Admissions Enquiry"
-              className={`group p-6 rounded-3xl bg-gradient-to-br border flex flex-col justify-between transition-all duration-500 ease-out hover:scale-105 hover:-translate-y-2 cursor-pointer select-none ${item.colorClass}`}
+              className={`w-[300px] sm:w-[340px] md:w-[360px] shrink-0 snap-center group p-6 rounded-3xl bg-gradient-to-br border flex flex-col justify-between transition-all duration-500 ease-out hover:scale-105 hover:-translate-y-2 cursor-pointer select-none ${item.colorClass}`}
             >
               {/* Top Image Box */}
               <div className="relative h-48 w-full overflow-hidden rounded-2xl mb-5 shadow-md border border-white/5">
