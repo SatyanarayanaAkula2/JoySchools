@@ -22,7 +22,7 @@ export default function AdminSidebar() {
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard, desc: "Console Home" },
     { name: "Students", href: "/admin/students", icon: Users, desc: "Registrations" },
     { name: "Faculty", href: "/admin/faculty", icon: GraduationCap, desc: "Mentor Directory" },
-    { name: "Events", href: "/admin/events", icon: Calendar, desc: "School Calendar" },
+    { name: "Holistic Development", href: "/admin/events", icon: Calendar, desc: "Clubs & Programs" },
     { name: "Gallery", href: "/admin/gallery", icon: ImageIcon, desc: "Media Uploads" },
     { name: "Achievements", href: "/admin/achievements", icon: Trophy, desc: "Awards Log" },
     { name: "Milestones", href: "/admin/milestones", icon: Milestone, desc: "Legacy Stats" },

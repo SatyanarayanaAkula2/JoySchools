@@ -148,7 +148,7 @@ export default function EventTable() {
           className="px-5 py-2.5 bg-primary hover:bg-accent text-white rounded-xl text-sm font-bold shadow-md shadow-primary/10 transition-all duration-200 flex items-center justify-center space-x-2 w-full sm:w-auto"
         >
           <Plus className="h-4 w-4" />
-          <span>Add Event</span>
+          <span>Add Program / Event</span>
         </button>
       </div>
 
@@ -161,7 +161,7 @@ export default function EventTable() {
           </div>
         ) : filteredEvents.length === 0 ? (
           <div className="p-20 text-center text-slate-400 text-sm">
-            No calendar events scheduled.
+            No holistic development programs scheduled.
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -169,9 +169,9 @@ export default function EventTable() {
               <thead>
                 <tr className="bg-slate-50 dark:bg-zinc-950 text-slate-400 dark:text-zinc-500 text-xs font-extrabold uppercase tracking-wider border-b border-slate-100 dark:border-zinc-850">
                   <th className="px-6 py-4 w-28">Flyer</th>
-                  <th className="px-6 py-4">Event Details</th>
+                  <th className="px-6 py-4">Program / Activity Details</th>
                   <th className="px-6 py-4">Category</th>
-                  <th className="px-6 py-4">Event Date</th>
+                  <th className="px-6 py-4">Program Date</th>
                   <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>

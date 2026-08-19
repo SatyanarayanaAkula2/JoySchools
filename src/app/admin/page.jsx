@@ -92,13 +92,13 @@ export default function AdminPage() {
       badge: "Mentor Roster",
     },
     {
-      name: "Calendar Events",
+      name: "Holistic Development",
       count: counts.events,
-      description: "Schedule school festivals, assemblies, and holidays.",
+      description: "Manage clubs, co-curriculars, sports meets, and school celebrations.",
       icon: Calendar,
       color: "text-sky-500 bg-sky-50 dark:bg-sky-950/30",
       href: "/admin/events",
-      badge: "Announcements",
+      badge: "Clubs & Activities",
     },
     {
       name: "Gallery Media",
