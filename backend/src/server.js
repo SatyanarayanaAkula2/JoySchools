@@ -33,7 +33,7 @@ const allowedOrigins = [
   process.env.FRONTEND_URL?.replace(/\/$/, ""),
   "http://localhost:3000",
   "http://127.0.0.1:3000",
-  "https://joy-schools.vercel.app",
+  "https://joy-schools-6g6n.vercel.app",
 ].filter(Boolean);
 
 app.use(
