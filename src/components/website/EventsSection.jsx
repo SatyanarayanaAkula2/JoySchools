@@ -65,20 +65,18 @@ export default function EventsSection({ events }) {
       className="py-20 bg-slate-50/70 dark:bg-background border-t border-slate-200/60"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header & Controls */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="space-y-3 max-w-2xl">
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
-              Events
-            </h2>
-            <div className="h-1 w-16 bg-accent rounded-full" />
-            <p className="text-base text-foreground/70 dark:text-foreground/85 leading-relaxed">
-              Stay up-to-date with our school calendar, upcoming festivals, academic symposiums, and sports tournaments.
-            </p>
-          </div>
+        {/* Header & Controls (Centered) */}
+        <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
+            Events
+          </h2>
+          <div className="h-1 w-16 bg-accent mx-auto rounded-full" />
+          <p className="text-base sm:text-lg text-foreground/70 dark:text-foreground/85 leading-relaxed">
+            Stay up-to-date with our school calendar, upcoming festivals, academic symposiums, and sports tournaments.
+          </p>
 
           {/* Slider Navigation */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center justify-center gap-3 pt-2">
             <button
               onClick={() => scroll("left")}
               aria-label="Scroll events left"
