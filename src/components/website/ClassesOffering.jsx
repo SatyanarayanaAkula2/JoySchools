@@ -99,12 +99,6 @@ export default function ClassesOffering() {
 
               {/* Header Text */}
               <div className="space-y-1">
-                <div className="flex items-center justify-between mb-1">
-                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${item.accentBg}`}>
-                    {item.ageGroup}
-                  </span>
-                </div>
-
                 <h3 className="font-display text-2xl font-black text-white group-hover:text-sky-300 transition-colors duration-300">
                   {item.level}
                 </h3>
