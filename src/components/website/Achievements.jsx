@@ -76,7 +76,7 @@ export default function Achievements({ initialHighlights }) {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="space-y-3 max-w-2xl">
             <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
-              Honors & Recognitions
+              Achievements
             </h2>
             <div className="h-1 w-16 bg-accent rounded-full" />
             <p className="text-base text-foreground/70 dark:text-foreground/85 leading-relaxed">
