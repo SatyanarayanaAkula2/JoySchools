@@ -30,7 +30,11 @@ export async function addGalleryItem(req, res) {
     return res.status(201).json({ success: true, item });
   } catch (error) {
     console.error("addGalleryItem controller error:", error);
-    const errorMsg = error.errors ? error.errors.map(e => e.message).join(", ") : error.message;
+    const errorMsg = error.errors
+      ? (Array.isArray(error.errors)
+          ? error.errors.map(e => e.message).join(", ")
+          : Object.values(error.errors).map(e => e.message || String(e)).join(", "))
+      : error.message;
     return res.status(400).json({ success: false, error: errorMsg || "Failed to add gallery item" });
   }
 }
@@ -59,7 +63,11 @@ export async function editGalleryItem(req, res) {
     return res.status(200).json({ success: true, item });
   } catch (error) {
     console.error("editGalleryItem controller error:", error);
-    const errorMsg = error.errors ? error.errors.map(e => e.message).join(", ") : error.message;
+    const errorMsg = error.errors
+      ? (Array.isArray(error.errors)
+          ? error.errors.map(e => e.message).join(", ")
+          : Object.values(error.errors).map(e => e.message || String(e)).join(", "))
+      : error.message;
     return res.status(400).json({ success: false, error: errorMsg || "Failed to update gallery item" });
   }
 }

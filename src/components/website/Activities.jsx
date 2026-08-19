@@ -3,8 +3,8 @@
 import { Trophy, Music, Cpu, Palette, MessageSquare, Heart, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
-export default function Activities() {
-  const activities = [
+export default function Activities({ initialEvents }) {
+  const fallbackActivities = [
     {
       title: "Sports & Athletics",
       icon: <Trophy className="h-6 w-6 text-white" />,
@@ -48,6 +48,56 @@ export default function Activities() {
       accentBg: "bg-teal-600",
     },
   ];
+
+  const getEventMeta = (category) => {
+    const cat = (category || "").toLowerCase();
+    switch (cat) {
+      case "sports":
+        return {
+          icon: <Trophy className="h-6 w-6 text-white" />,
+          accentBg: "bg-emerald-600",
+        };
+      case "co-curricular":
+        return {
+          icon: <Music className="h-6 w-6 text-white" />,
+          accentBg: "bg-indigo-600",
+        };
+      case "academic":
+        return {
+          icon: <Cpu className="h-6 w-6 text-white" />,
+          accentBg: "bg-sky-600",
+        };
+      case "achievement":
+        return {
+          icon: <Trophy className="h-6 w-6 text-white" />,
+          accentBg: "bg-rose-500",
+        };
+      case "holiday":
+        return {
+          icon: <Heart className="h-6 w-6 text-white" />,
+          accentBg: "bg-amber-600",
+        };
+      default:
+        return {
+          icon: <Palette className="h-6 w-6 text-white" />,
+          accentBg: "bg-rose-500",
+        };
+    }
+  };
+
+  const activities = initialEvents && initialEvents.length > 0
+    ? initialEvents.map(evt => {
+        const meta = getEventMeta(evt.category);
+        return {
+          title: evt.title,
+          image: evt.image || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=500&q=80",
+          description: evt.description,
+          date: evt.date,
+          icon: meta.icon,
+          accentBg: meta.accentBg,
+        };
+      })
+    : fallbackActivities;
 
   return (
     <section
@@ -98,6 +148,15 @@ export default function Activities() {
                   <h3 className="font-display text-xl font-bold text-primary dark:text-white group-hover:text-accent transition-colors duration-200">
                     {act.title}
                   </h3>
+                  {act.date && (
+                    <p className="text-xs font-semibold text-accent dark:text-accent/90">
+                      📅 {new Date(act.date).toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </p>
+                  )}
                   <p className="text-sm text-foreground/70 dark:text-foreground/80 leading-relaxed">
                     {act.description}
                   </p>

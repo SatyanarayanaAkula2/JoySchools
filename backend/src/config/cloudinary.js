@@ -21,17 +21,29 @@ export async function uploadImage(buffer, folder = "joyschools") {
   configureCloudinary();
 
   return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload_stream(
-      { folder },
-      (error, result) => {
-        if (error) {
-          console.error("Cloudinary upload error:", error);
-          reject(error);
-        } else {
-          resolve(result.secure_url);
+    try {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder },
+        (error, result) => {
+          if (error) {
+            console.error("Cloudinary upload error:", error);
+            reject(error);
+          } else {
+            resolve(result.secure_url);
+          }
         }
-      }
-    ).end(buffer);
+      );
+
+      uploadStream.on("error", (err) => {
+        console.error("Cloudinary upload stream error event:", err);
+        reject(err);
+      });
+
+      uploadStream.end(buffer);
+    } catch (err) {
+      console.error("Cloudinary upload synchronous error:", err);
+      reject(err);
+    }
   });
 }
 

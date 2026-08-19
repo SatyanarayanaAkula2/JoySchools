@@ -17,19 +17,22 @@ export default async function Home() {
   let facultyData = [];
   let galleryData = [];
   let achievementData = [];
+  let eventData = [];
 
   try {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
     
-    const [resFaculty, resGallery, resAchievements] = await Promise.all([
+    const [resFaculty, resGallery, resAchievements, resEvents] = await Promise.all([
       fetch(`${backendUrl}/api/faculty`, { cache: "no-store" }).then((r) => r.json()),
       fetch(`${backendUrl}/api/gallery`, { cache: "no-store" }).then((r) => r.json()),
       fetch(`${backendUrl}/api/achievements`, { cache: "no-store" }).then((r) => r.json()),
+      fetch(`${backendUrl}/api/events`, { cache: "no-store" }).then((r) => r.json()),
     ]);
 
     facultyData = resFaculty.faculty || [];
     galleryData = resGallery.gallery || [];
     achievementData = resAchievements.achievements || [];
+    eventData = resEvents.events || [];
   } catch (error) {
     console.warn("Failed to load homepage dynamic records from Express backend, using placeholders:", error);
   }
@@ -57,7 +60,7 @@ export default async function Home() {
         <Faculty initialStaff={facultyData} />
 
         {/* Co-curriculars: Clubs & Sports */}
-        <Activities />
+        <Activities initialEvents={eventData} />
 
         {/* Milestones: Achievements Dashboard (Dynamic) */}
         <Achievements initialHighlights={achievementData} />

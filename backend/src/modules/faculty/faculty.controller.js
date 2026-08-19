@@ -37,7 +37,11 @@ export async function addFaculty(req, res) {
     return res.status(201).json({ success: true, faculty: item });
   } catch (error) {
     console.error("addFaculty controller error:", error);
-    const errorMsg = error.errors ? error.errors.map(e => e.message).join(", ") : error.message;
+    const errorMsg = error.errors
+      ? (Array.isArray(error.errors)
+          ? error.errors.map(e => e.message).join(", ")
+          : Object.values(error.errors).map(e => e.message || String(e)).join(", "))
+      : error.message;
     return res.status(400).json({ success: false, error: errorMsg || "Failed to add faculty profile" });
   }
 }
@@ -72,7 +76,11 @@ export async function editFaculty(req, res) {
     return res.status(200).json({ success: true, faculty: item });
   } catch (error) {
     console.error("editFaculty controller error:", error);
-    const errorMsg = error.errors ? error.errors.map(e => e.message).join(", ") : error.message;
+    const errorMsg = error.errors
+      ? (Array.isArray(error.errors)
+          ? error.errors.map(e => e.message).join(", ")
+          : Object.values(error.errors).map(e => e.message || String(e)).join(", "))
+      : error.message;
     return res.status(400).json({ success: false, error: errorMsg || "Failed to update faculty profile" });
   }
 }

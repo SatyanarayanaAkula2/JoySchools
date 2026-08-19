@@ -5,10 +5,7 @@ import { X, ChevronLeft, ChevronRight, Maximize2, Image as ImageIcon } from "luc
 import Image from "next/image";
 
 export default function Gallery({ initialItems }) {
-  const [activeFilter, setActiveFilter] = useState("All");
   const [selectedImageIdx, setSelectedImageIdx] = useState(null);
-
-  const albums = ["All", "Sports Meet", "Science Fair", "Cultural Fest", "Campus Life"];
 
   const items = initialItems && initialItems.length > 0 ? initialItems : [
     {
@@ -61,10 +58,8 @@ export default function Gallery({ initialItems }) {
     },
   ];
 
-  // Filter items based on active tab
-  const filteredItems = activeFilter === "All" 
-    ? items 
-    : items.filter(item => item.album === activeFilter);
+  // Filter items: only pictures with a name (title) should be displayed
+  const filteredItems = items.filter(item => item.title && item.title.trim() !== "");
 
   const handlePrev = useCallback(() => {
     setSelectedImageIdx((prev) => 
@@ -112,25 +107,6 @@ export default function Gallery({ initialItems }) {
           </p>
         </div>
 
-        {/* Filter Navigation */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {albums.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => {
-                setActiveFilter(tab);
-                setSelectedImageIdx(null); // Reset lightbox tracking on filter change
-              }}
-              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm ${
-                activeFilter === tab
-                  ? "bg-primary text-white dark:bg-accent dark:text-primary-dark scale-105"
-                  : "bg-white dark:bg-white/5 text-foreground/75 dark:text-foreground/90 hover:bg-primary-light dark:hover:bg-white/10"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
 
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
