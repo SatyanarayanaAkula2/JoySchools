@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import AdminLayoutWrapper from "@/components/admin/AdminLayoutWrapper";
 import Link from "next/link";
 import {
@@ -7,15 +10,72 @@ import {
   Image as ImageIcon,
   Trophy,
   ArrowRight,
+  Loader2,
 } from "lucide-react";
 
-export const dynamic = "force-dynamic";
-
 export default function AdminPage() {
+  const [counts, setCounts] = useState({
+    students: null,
+    faculty: null,
+    events: null,
+    gallery: null,
+    achievements: null,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadStats() {
+      try {
+        const [
+          resStudents,
+          resFaculty,
+          resEvents,
+          resGallery,
+          resAchievements,
+        ] = await Promise.allSettled([
+          fetch("/api/students").then((r) => r.json()),
+          fetch("/api/faculty").then((r) => r.json()),
+          fetch("/api/events").then((r) => r.json()),
+          fetch("/api/gallery").then((r) => r.json()),
+          fetch("/api/achievements").then((r) => r.json()),
+        ]);
+
+        setCounts({
+          students:
+            resStudents.status === "fulfilled" && resStudents.value?.success
+              ? (resStudents.value.students?.length ?? 0)
+              : 0,
+          faculty:
+            resFaculty.status === "fulfilled" && resFaculty.value?.success
+              ? (resFaculty.value.faculty?.length ?? 0)
+              : 0,
+          events:
+            resEvents.status === "fulfilled" && resEvents.value?.success
+              ? (resEvents.value.events?.length ?? 0)
+              : 0,
+          gallery:
+            resGallery.status === "fulfilled" && resGallery.value?.success
+              ? (resGallery.value.gallery?.length ?? 0)
+              : 0,
+          achievements:
+            resAchievements.status === "fulfilled" && resAchievements.value?.success
+              ? (resAchievements.value.achievements?.length ?? 0)
+              : 0,
+        });
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadStats();
+  }, []);
+
   const cards = [
     {
       name: "Students Registered",
-      count: 145,
+      count: counts.students,
       description: "Manage classes, roll logs, and profile records.",
       icon: Users,
       color: "text-emerald-500 bg-emerald-50 dark:bg-emerald-950/30",
@@ -24,7 +84,7 @@ export default function AdminPage() {
     },
     {
       name: "Faculty Profiles",
-      count: 12,
+      count: counts.faculty,
       description: "Manage school teacher and principal profiles.",
       icon: GraduationCap,
       color: "text-indigo-500 bg-indigo-50 dark:bg-indigo-950/30",
@@ -33,7 +93,7 @@ export default function AdminPage() {
     },
     {
       name: "Calendar Events",
-      count: 8,
+      count: counts.events,
       description: "Schedule school festivals, assemblies, and holidays.",
       icon: Calendar,
       color: "text-sky-500 bg-sky-50 dark:bg-sky-950/30",
@@ -42,7 +102,7 @@ export default function AdminPage() {
     },
     {
       name: "Gallery Media",
-      count: 24,
+      count: counts.gallery,
       description: "Upload sports meet and cultural fest photos.",
       icon: ImageIcon,
       color: "text-amber-500 bg-amber-50 dark:bg-amber-950/30",
@@ -51,7 +111,7 @@ export default function AdminPage() {
     },
     {
       name: "Award Milestones",
-      count: 6,
+      count: counts.achievements,
       description: "Display academic honors and olympiad victories.",
       icon: Trophy,
       color: "text-rose-500 bg-rose-50 dark:bg-rose-950/30",
@@ -101,8 +161,12 @@ export default function AdminPage() {
                   
                   {/* Counts and Title */}
                   <div className="space-y-1">
-                    <div className="font-display text-4xl font-black text-primary dark:text-accent tracking-tight">
-                      {card.count}
+                    <div className="font-display text-4xl font-black text-primary dark:text-accent tracking-tight flex items-center min-h-[40px]">
+                      {loading || card.count === null ? (
+                        <span className="inline-block w-12 h-8 bg-slate-200 dark:bg-zinc-800 animate-pulse rounded-lg" />
+                      ) : (
+                        card.count
+                      )}
                     </div>
                     <h3 className="font-bold text-slate-800 dark:text-white text-base">
                       {card.name}
