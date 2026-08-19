@@ -7,7 +7,7 @@ export default function MissionVision({ adminImage }) {
   return (
     <section
       id="about"
-      className="py-24 bg-white dark:bg-background border-y border-primary/5 relative overflow-hidden"
+      className="py-24 bg-slate-50/80 dark:bg-background border-y border-slate-200/60 relative overflow-hidden"
     >
       {/* Background decorations */}
       <div className="absolute top-20 -left-10 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />

@@ -90,7 +90,7 @@ export default function Gallery({ initialItems }) {
   return (
     <section
       id="gallery"
-      className="py-20 bg-gradient-to-br from-white via-primary-light/5 to-transparent dark:from-background dark:via-primary-dark/5 dark:to-transparent"
+      className="py-20 bg-gradient-to-br from-slate-100/60 via-primary-light/5 to-transparent dark:from-background dark:via-primary-dark/5 dark:to-transparent"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}

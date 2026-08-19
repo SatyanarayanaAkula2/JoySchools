@@ -102,7 +102,7 @@ export default function Activities({ initialEvents }) {
   return (
     <section
       id="activities"
-      className="py-20 bg-gradient-to-br from-primary-light/10 via-white to-transparent dark:from-primary-dark/5 dark:via-background dark:to-transparent"
+      className="py-20 bg-gradient-to-br from-primary-light/10 via-slate-100/50 to-transparent dark:from-primary-dark/5 dark:via-background dark:to-transparent"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}

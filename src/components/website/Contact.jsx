@@ -40,7 +40,7 @@ export default function Contact({ settings }) {
   return (
     <section
       id="contact"
-      className="py-20 bg-white dark:bg-background border-t border-primary/5"
+      className="py-20 bg-slate-50/80 dark:bg-background border-t border-slate-200/60"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
