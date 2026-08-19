@@ -48,8 +48,8 @@ export default function MissionVision({ adminImage }) {
               
               {/* Floating Name Overlay */}
               <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 text-white">
-                <h4 className="text-xl font-bold font-display">Mrs. S. R. Lakshmi</h4>
-                <p className="text-xs text-accent font-semibold uppercase tracking-wider mt-1">School Administrator</p>
+                <h4 className="text-xl font-bold font-display">Mrs. Suseela</h4>
+                <p className="text-xs text-accent font-semibold uppercase tracking-wider mt-1">Principal, JOY E.M. HIGH SCHOOL</p>
               </div>
             </div>
 
@@ -67,25 +67,28 @@ export default function MissionVision({ adminImage }) {
             </div>
 
             <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-primary dark:text-white leading-tight">
-              &ldquo;Nurturing Excellence, character, and hard work in every child.&rdquo;
+              &ldquo;Nurturing Excellence, Character, and Hard Work in Every Child&rdquo;
             </h3>
 
             <div className="space-y-4 text-foreground/80 dark:text-foreground/90 text-base leading-relaxed font-medium">
-              <p>
-                Welcome to JOY E.M HIGH SCHOOL. As the Administrator, it is my privilege to welcome you to our community. At our institution, we strongly believe that education is the ultimate catalyst for change, and we are dedicated to helping our students achieve their fullest potential.
+              <p className="font-semibold text-primary dark:text-accent">
+                Welcome to JOY E.M. HIGH SCHOOL.
               </p>
               <p>
-                Guided by the State Board curriculum, we offer structured instruction spanning from Nursery up to Class 10. Our school focuses on establishing a firm foundation of discipline, academic rigor, and creative problem-solving. We emphasize interactive visual labs, co-curricular sports, and values that prepare students for real-world excellence.
+                As the Administrator, it is my privilege to welcome you to our school community. We believe that true education goes beyond academics—it builds character, confidence, discipline, and a lifelong love for learning.
               </p>
               <p>
-                Following our core philosophy—that genius and success are the results of dedication, perseverance, and honest sweat—we encourage a classroom culture where effort is celebrated. We work hand-in-hand with parents to shape responsible, empathetic, and capable leaders of tomorrow.
+                With a strong foundation from Nursery to Class 10, we are committed to providing quality education through engaging learning, creative activities, sports, and strong values. We encourage every child to discover their potential, work with dedication, and grow into a responsible and compassionate individual.
+              </p>
+              <p>
+                Together with parents, we strive to nurture confident, capable, and responsible citizens who are prepared to achieve excellence in life.
               </p>
             </div>
 
             <div className="pt-6 border-t border-primary/10 flex items-center gap-4">
               <div>
-                <span className="block text-sm font-black text-primary dark:text-accent uppercase tracking-wider">Mrs. S. R. Lakshmi</span>
-                <span className="text-xs text-foreground/60 dark:text-foreground/75 font-semibold">Chief Administrator, JOY E.M HIGH SCHOOL</span>
+                <span className="block text-sm font-black text-primary dark:text-accent uppercase tracking-wider">Mrs. Suseela</span>
+                <span className="text-xs text-foreground/60 dark:text-foreground/75 font-semibold">Principal, JOY E.M. HIGH SCHOOL</span>
               </div>
             </div>
           </div>

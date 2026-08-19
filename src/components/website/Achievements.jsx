@@ -69,10 +69,10 @@ export default function Achievements({ initialHighlights }) {
   return (
     <section
       id="achievements"
-      className="py-20 bg-slate-50/80 dark:bg-background border-t border-slate-200/60"
+      className="py-20 bg-slate-50/80 dark:bg-background border-t border-slate-200/60 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header & Slider Controls (Centered) */}
+        {/* Section Header (Centered) */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
             Achievements & Highlights
@@ -81,82 +81,85 @@ export default function Achievements({ initialHighlights }) {
           <p className="text-base sm:text-lg text-foreground/70 dark:text-foreground/85 leading-relaxed">
             Celebrating exceptional student accomplishments in academics, competitive sports, and environmental leadership.
           </p>
-
-          {/* Slider Controls */}
-          <div className="flex items-center justify-center gap-3 pt-2">
-            <button
-              onClick={() => scroll("left")}
-              aria-label="Scroll achievements left"
-              className="p-3 rounded-full bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 shadow-sm hover:bg-accent hover:text-white dark:hover:bg-accent transition-all duration-200"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => scroll("right")}
-              aria-label="Scroll achievements right"
-              className="p-3 rounded-full bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 shadow-sm hover:bg-accent hover:text-white dark:hover:bg-accent transition-all duration-200"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
         </div>
 
-        {/* Single Row Slider */}
-        <div
-          ref={scrollRef}
-          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 -mx-4 px-4 sm:mx-0 sm:px-0"
-        >
-          {highlights.map((card, idx) => (
-            <div
-              key={idx}
-              className="snap-start shrink-0 w-[300px] sm:w-[350px] md:w-[380px] group relative rounded-2xl overflow-hidden border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 shadow-sm hover:shadow-xl hover:border-accent/40 transition-all duration-300 flex flex-col justify-between"
-            >
-              {/* Image Area with category badge */}
-              <div className="relative aspect-[16/10] overflow-hidden">
-                <Image
-                  src={card.image}
-                  alt={card.title}
-                  fill
-                  sizes="(max-width: 768px) 80vw, 380px"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+        {/* Carousel Wrapper with Left and Right Arrows */}
+        <div className="relative group/slider px-2 sm:px-4">
+          {/* Left Arrow */}
+          <button
+            onClick={() => scroll("left")}
+            aria-label="Scroll achievements left"
+            className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-3.5 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 shadow-xl hover:bg-[#1a56db] hover:text-white dark:hover:bg-accent dark:hover:text-primary transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none"
+          >
+            <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+          </button>
 
-                {/* Category Badge */}
-                <span className="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md dark:bg-accent dark:text-primary-dark">
-                  {card.category}
-                </span>
-              </div>
+          {/* Right Arrow */}
+          <button
+            onClick={() => scroll("right")}
+            aria-label="Scroll achievements right"
+            className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-3.5 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 shadow-xl hover:bg-[#1a56db] hover:text-white dark:hover:bg-accent dark:hover:text-primary transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none"
+          >
+            <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+          </button>
 
-              {/* Content details */}
-              <div className="p-6 flex flex-col justify-between flex-grow">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-xs font-semibold text-foreground/60 dark:text-foreground/75">
-                    <Calendar className="h-3.5 w-3.5 text-accent" />
-                    <span>{card.year}</span>
-                  </div>
+          {/* Single Row Slider */}
+          <div
+            ref={scrollRef}
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none scroll-smooth py-4 px-1"
+          >
+            {highlights.map((card, idx) => (
+              <div
+                key={idx}
+                className="snap-start shrink-0 w-[290px] sm:w-[340px] md:w-[360px] group relative rounded-2xl overflow-hidden border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 shadow-sm hover:shadow-xl hover:border-accent/40 transition-all duration-300 flex flex-col justify-between"
+              >
+                {/* Image Area with category badge */}
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <Image
+                    src={card.image}
+                    alt={card.title}
+                    fill
+                    sizes="(max-width: 768px) 80vw, 360px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
 
-                  <h4 className="font-display text-xl font-bold text-primary dark:text-white group-hover:text-accent transition-colors duration-200">
-                    {card.title}
-                  </h4>
-
-                  <p className="text-sm text-foreground/70 dark:text-foreground/80 leading-relaxed line-clamp-3">
-                    {card.description}
-                  </p>
-                </div>
-
-                {/* Footer icon */}
-                <div className="pt-5 border-t border-slate-100 dark:border-zinc-800 mt-5 flex justify-between items-center">
-                  <span className="text-xs font-semibold text-foreground/50 dark:text-foreground/60">
-                    Certified Accolade
+                  {/* Category Badge */}
+                  <span className="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md dark:bg-accent dark:text-primary-dark">
+                    {card.category}
                   </span>
-                  <div className="p-2 rounded-lg bg-accent-light dark:bg-accent/10">
-                    {getIcon(card)}
+                </div>
+
+                {/* Content details */}
+                <div className="p-6 flex flex-col justify-between flex-grow">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-foreground/60 dark:text-foreground/75">
+                      <Calendar className="h-3.5 w-3.5 text-accent" />
+                      <span>{card.year}</span>
+                    </div>
+
+                    <h4 className="font-display text-xl font-bold text-primary dark:text-white group-hover:text-accent transition-colors duration-200">
+                      {card.title}
+                    </h4>
+
+                    <p className="text-sm text-foreground/70 dark:text-foreground/80 leading-relaxed line-clamp-3">
+                      {card.description}
+                    </p>
+                  </div>
+
+                  {/* Footer icon */}
+                  <div className="pt-5 border-t border-slate-100 dark:border-zinc-800 mt-5 flex justify-between items-center">
+                    <span className="text-xs font-semibold text-foreground/50 dark:text-foreground/60">
+                      Certified Accolade
+                    </span>
+                    <div className="p-2 rounded-lg bg-accent-light dark:bg-accent/10">
+                      {getIcon(card)}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
