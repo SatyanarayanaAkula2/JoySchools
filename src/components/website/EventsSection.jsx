@@ -62,7 +62,7 @@ export default function EventsSection({ events }) {
   return (
     <section
       id="events"
-      className="py-20 bg-slate-50/70 dark:bg-background border-t border-slate-200/60 overflow-hidden"
+      className="py-20 bg-slate-50/70 dark:bg-background border-t border-slate-200/60"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header (Centered) */}
@@ -76,35 +76,26 @@ export default function EventsSection({ events }) {
           </p>
         </div>
 
-        {/* Carousel Wrapper with Left and Right Arrows */}
-        <div className="relative group/slider px-2 sm:px-4">
-          {/* Left Arrow */}
+        {/* Carousel Container with Side Navigation Buttons */}
+        <div className="relative group/slider">
+          {/* Left Arrow Button */}
           <button
             onClick={() => scroll("left")}
             aria-label="Scroll events left"
-            className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-3.5 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 shadow-xl hover:bg-[#1a56db] hover:text-white dark:hover:bg-accent dark:hover:text-primary transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none"
+            className="absolute -left-2 sm:-left-5 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-white/95 dark:bg-zinc-800/95 border border-slate-200 dark:border-zinc-700 shadow-xl text-slate-700 dark:text-white hover:bg-accent hover:text-white dark:hover:bg-accent transition-all duration-200 focus:outline-none backdrop-blur-sm"
           >
-            <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+            <ChevronLeft className="h-6 w-6" />
           </button>
 
-          {/* Right Arrow */}
-          <button
-            onClick={() => scroll("right")}
-            aria-label="Scroll events right"
-            className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-3.5 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 shadow-xl hover:bg-[#1a56db] hover:text-white dark:hover:bg-accent dark:hover:text-primary transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none"
-          >
-            <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
-          </button>
-
-          {/* Single Row Slider */}
+          {/* Single Row Slider without scrollbar */}
           <div
             ref={scrollRef}
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none scroll-smooth py-4 px-1"
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth py-2 px-1"
           >
             {eventList.map((evt, idx) => (
               <div
                 key={idx}
-                className="snap-start shrink-0 w-[290px] sm:w-[340px] md:w-[360px] group relative rounded-2xl overflow-hidden border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all duration-300 flex flex-col justify-between"
+                className="snap-start shrink-0 w-[300px] sm:w-[350px] md:w-[380px] group relative rounded-2xl overflow-hidden border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all duration-300 flex flex-col justify-between"
               >
                 {/* Image Banner */}
                 <div className="relative aspect-[16/10] overflow-hidden">
@@ -112,7 +103,7 @@ export default function EventsSection({ events }) {
                     src={evt.image || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=500&q=80"}
                     alt={evt.title}
                     fill
-                    sizes="(max-width: 768px) 80vw, 360px"
+                    sizes="(max-width: 768px) 80vw, 380px"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   
@@ -147,6 +138,15 @@ export default function EventsSection({ events }) {
               </div>
             ))}
           </div>
+
+          {/* Right Arrow Button */}
+          <button
+            onClick={() => scroll("right")}
+            aria-label="Scroll events right"
+            className="absolute -right-2 sm:-right-5 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-white/95 dark:bg-zinc-800/95 border border-slate-200 dark:border-zinc-700 shadow-xl text-slate-700 dark:text-white hover:bg-accent hover:text-white dark:hover:bg-accent transition-all duration-200 focus:outline-none backdrop-blur-sm"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
         </div>
       </div>
     </section>

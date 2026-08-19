@@ -96,7 +96,7 @@ export default function Activities({ initialActivities }) {
   return (
     <section
       id="activities"
-      className="py-20 bg-gradient-to-br from-primary-light/10 via-slate-100/50 to-transparent dark:from-primary-dark/5 dark:via-background dark:to-transparent overflow-hidden"
+      className="py-20 bg-gradient-to-br from-primary-light/10 via-slate-100/50 to-transparent dark:from-primary-dark/5 dark:via-background dark:to-transparent"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header (Centered) */}
@@ -110,35 +110,26 @@ export default function Activities({ initialActivities }) {
           </p>
         </div>
 
-        {/* Carousel Wrapper with Left and Right Arrows */}
-        <div className="relative group/slider px-2 sm:px-4">
-          {/* Left Arrow */}
+        {/* Carousel Container with Side Navigation Buttons */}
+        <div className="relative group/slider">
+          {/* Left Arrow Button */}
           <button
             onClick={() => scroll("left")}
             aria-label="Scroll left"
-            className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-3.5 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 shadow-xl hover:bg-[#1a56db] hover:text-white dark:hover:bg-accent dark:hover:text-primary transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none"
+            className="absolute -left-2 sm:-left-5 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-white/95 dark:bg-zinc-800/95 border border-slate-200 dark:border-zinc-700 shadow-xl text-slate-700 dark:text-white hover:bg-accent hover:text-white dark:hover:bg-accent transition-all duration-200 focus:outline-none backdrop-blur-sm"
           >
-            <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+            <ChevronLeft className="h-6 w-6" />
           </button>
 
-          {/* Right Arrow */}
-          <button
-            onClick={() => scroll("right")}
-            aria-label="Scroll right"
-            className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-3.5 rounded-full bg-white dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 shadow-xl hover:bg-[#1a56db] hover:text-white dark:hover:bg-accent dark:hover:text-primary transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none"
-          >
-            <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
-          </button>
-
-          {/* Horizontal Slider (Single Row) */}
+          {/* Horizontal Slider (Single Row without scrollbar) */}
           <div
             ref={scrollRef}
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none scroll-smooth py-4 px-1"
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth py-2 px-1"
           >
             {activities.map((act, idx) => (
               <div
                 key={idx}
-                className="snap-start shrink-0 w-[290px] sm:w-[340px] md:w-[360px] group relative rounded-2xl overflow-hidden border border-slate-200/80 dark:border-primary/10 bg-white dark:bg-primary-dark/15 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col justify-between"
+                className="snap-start shrink-0 w-[300px] sm:w-[350px] md:w-[380px] group relative rounded-2xl overflow-hidden border border-slate-200/80 dark:border-primary/10 bg-white dark:bg-primary-dark/15 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col justify-between"
               >
                 {/* Image Banner */}
                 <div className="relative aspect-[16/10] overflow-hidden">
@@ -146,7 +137,7 @@ export default function Activities({ initialActivities }) {
                     src={act.image}
                     alt={act.title}
                     fill
-                    sizes="(max-width: 768px) 80vw, 360px"
+                    sizes="(max-width: 768px) 80vw, 380px"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   
@@ -170,6 +161,15 @@ export default function Activities({ initialActivities }) {
               </div>
             ))}
           </div>
+
+          {/* Right Arrow Button */}
+          <button
+            onClick={() => scroll("right")}
+            aria-label="Scroll right"
+            className="absolute -right-2 sm:-right-5 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-white/95 dark:bg-zinc-800/95 border border-slate-200 dark:border-zinc-700 shadow-xl text-slate-700 dark:text-white hover:bg-accent hover:text-white dark:hover:bg-accent transition-all duration-200 focus:outline-none backdrop-blur-sm"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
         </div>
       </div>
     </section>
