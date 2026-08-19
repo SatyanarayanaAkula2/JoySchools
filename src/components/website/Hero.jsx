@@ -46,29 +46,26 @@ export default function Hero({ slideImages }) {
   return (
     <section
       id="hero"
-      className="relative min-h-[92vh] flex items-center pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden"
+      className="relative min-h-[94vh] flex items-center pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden"
     >
-      {/* Background School Image Occupying Full Page */}
+      {/* 100% Fully Visible Raw Background School Image (No White Mask) */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/school_bg.jpg')" }}
       />
 
-      {/* Balanced Overlay for Text Contrast without Milky Layer */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-r from-white/90 via-white/75 to-white/30 dark:from-slate-950/90 dark:via-slate-950/80 dark:to-slate-950/50 backdrop-blur-[1px]" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* Left Text Column */}
-          <div className="lg:col-span-7 flex flex-col items-start space-y-6 text-left animate-fade-in-up">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Left Text Column enclosed in a refined glass container */}
+          <div className="lg:col-span-7 flex flex-col items-start space-y-6 text-left p-8 sm:p-10 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-white/50 dark:border-white/10 shadow-2xl animate-fade-in-up">
             {/* Headline */}
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-primary dark:text-white leading-[1.1] tracking-tight drop-shadow-sm">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-primary dark:text-white leading-[1.1] tracking-tight">
               Empowering Minds, <br className="hidden sm:inline" />
               <span className="text-accent">Shaping Futures</span>
             </h1>
 
             {/* Tagline */}
-            <p className="text-lg sm:text-xl font-semibold text-slate-800 dark:text-slate-100 max-w-2xl">
+            <p className="text-lg sm:text-xl font-bold text-slate-800 dark:text-slate-100 max-w-2xl">
               Where curiosity meets discovery, and every child finds their path.
             </p>
 
@@ -79,9 +76,9 @@ export default function Hero({ slideImages }) {
           </div>
 
           {/* Right Image/Illustration Column */}
-          <div className="lg:col-span-5 relative flex justify-center items-center lg:pl-4">
-            {/* Hero Image Container with Slideshow - border cleaned up */}
-            <div className="relative z-10 w-full aspect-[4/3] sm:aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] border border-white/20 dark:border-white/10">
+          <div className="lg:col-span-5 relative flex justify-center items-center">
+            {/* Hero Image Container with Slideshow */}
+            <div className="relative z-10 w-full aspect-[4/3] sm:aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] border-2 border-white/80 dark:border-white/20">
               {sliderImages.map((image, idx) => (
                 <div
                   key={idx}
