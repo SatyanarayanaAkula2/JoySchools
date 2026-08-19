@@ -56,21 +56,21 @@ export default function Hero({ slideImages }) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Left Text Column enclosed in a refined glass container */}
-          <div className="lg:col-span-7 flex flex-col items-start space-y-6 text-left p-8 sm:p-10 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-white/50 dark:border-white/10 shadow-2xl animate-fade-in-up">
+          {/* Left Text Column - Transparent */}
+          <div className="lg:col-span-7 flex flex-col items-start space-y-6 text-left animate-fade-in-up">
             {/* Headline */}
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-primary dark:text-white leading-[1.1] tracking-tight">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-primary dark:text-white leading-[1.1] tracking-tight drop-shadow-[0_2px_8px_rgba(255,255,255,0.9)]">
               Empowering Minds, <br className="hidden sm:inline" />
-              <span className="text-accent">Shaping Futures</span>
+              <span className="text-accent drop-shadow-[0_2px_8px_rgba(255,255,255,0.9)]">Shaping Futures</span>
             </h1>
 
             {/* Tagline */}
-            <p className="text-lg sm:text-xl font-bold text-slate-800 dark:text-slate-100 max-w-2xl">
+            <p className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white max-w-2xl drop-shadow-[0_1px_4px_rgba(255,255,255,0.9)]">
               Where curiosity meets discovery, and every child finds their path.
             </p>
 
             {/* Supporting Sentence */}
-            <p className="text-base sm:text-lg text-slate-700 dark:text-slate-300 leading-relaxed max-w-xl font-normal">
+            <p className="text-base sm:text-lg text-slate-900 dark:text-slate-200 leading-relaxed max-w-xl font-semibold drop-shadow-[0_1px_4px_rgba(255,255,255,0.8)]">
               From Nursery to Class 10, JOY E.M HIGH SCHOOL offers a nurturing, State Board curriculum designed to foster academic excellence, creative thinking, and strong values.
             </p>
           </div>
