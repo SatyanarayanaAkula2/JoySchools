@@ -107,12 +107,9 @@ export default function Activities({ initialEvents }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="font-display text-sm font-bold text-accent uppercase tracking-widest">
-            Clubs & Sports
-          </h2>
-          <p className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
             Holistic Development Programs
-          </p>
+          </h2>
           <div className="h-1 w-16 bg-accent mx-auto rounded-full" />
           <p className="text-base sm:text-lg text-foreground/70 dark:text-foreground/85">
             Education at JOY E.M HIGH SCHOOL goes beyond classroom walls. We offer a rich variety of extra-curricular activities designed to discover and nurture every child&apos;s talent.
