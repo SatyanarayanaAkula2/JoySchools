@@ -127,10 +127,10 @@ export default function Contact({ settings }) {
               </div>
             </div>
 
-            {/* Google Map */}
+            {/* Google Map Place Holder */}
             <div className="relative aspect-[4/3] sm:aspect-[16/9] lg:aspect-[4/3] rounded-2xl overflow-hidden border border-primary/10 shadow-md">
               <iframe
-                src={settings?.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.9265147814876!2d77.62193527589999!3d12.976594214751433!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1680d22c0389%3A0x7d028b030e427187!2sBengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"}
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.9265147814876!2d77.62193527589999!3d12.976594214751433!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1680d22c0389%3A0x7d028b030e427187!2sBengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -138,7 +138,7 @@ export default function Contact({ settings }) {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="JOY E.M HIGH SCHOOL Campus Location Map"
-                className="contrast-[0.95]"
+                className="grayscale dark:invert contrast-[0.9]"
               ></iframe>
             </div>
           </div>

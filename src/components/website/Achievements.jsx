@@ -14,7 +14,7 @@ export default function Achievements({ initialHighlights }) {
       year: "2025 - 2026",
       icon: <Award className="h-5 w-5 text-accent" />,
       image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=500&q=80",
-      description: "Two of our Class 10 students secured Top 50 national ranks in the National Science Olympiad, showcasing our strong emphasis on conceptual STEM learning.",
+      description: "Two of our Class 10 students secured Top 50 national ranks in the National Science Olympiad, showcasing our strong conceptual STEM learning.",
     },
     {
       title: "State Basketball Champions",
@@ -32,16 +32,23 @@ export default function Achievements({ initialHighlights }) {
       image: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=500&q=80",
       description: "Recognized by the Environmental Board for our zero-waste initiative, active student green club, and 100% solar-powered campus infrastructure.",
     },
+    {
+      title: "All-India Math Olympiad Honors",
+      category: "Academic Excellence",
+      year: "2025",
+      icon: <Award className="h-5 w-5 text-accent" />,
+      image: "https://images.unsplash.com/photo-1596495578065-6e0763fa1178?auto=format&fit=crop&w=500&q=80",
+      description: "Distinction awards across junior and senior school batches in the prestigious All-India Mathematics Olympiad.",
+    },
   ];
 
   const highlights = initialHighlights && initialHighlights.length > 0 ? initialHighlights : fallbackHighlights;
 
   const scroll = (direction) => {
     if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollAmount = clientWidth * 0.8;
-      scrollRef.current.scrollTo({
-        left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
+      const scrollAmount = 380;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
       });
     }
@@ -49,11 +56,11 @@ export default function Achievements({ initialHighlights }) {
 
   const getIcon = (item) => {
     if (item.icon) return item.icon;
-    const cat = item.category || "";
-    if (cat.toLowerCase().includes("sport") || cat.toLowerCase().includes("athletic")) {
+    const cat = (item.category || "").toLowerCase();
+    if (cat.includes("sport") || cat.includes("athletic")) {
       return <Trophy className="h-5 w-5 text-accent" />;
     }
-    if (cat.toLowerCase().includes("environment") || cat.toLowerCase().includes("eco") || cat.toLowerCase().includes("green") || cat.toLowerCase().includes("leaf")) {
+    if (cat.includes("environment") || cat.includes("eco") || cat.includes("green")) {
       return <Leaf className="h-5 w-5 text-accent" />;
     }
     return <Award className="h-5 w-5 text-accent" />;
@@ -62,50 +69,49 @@ export default function Achievements({ initialHighlights }) {
   return (
     <section
       id="achievements"
-      className="py-20 bg-gradient-to-br from-slate-100/60 via-primary-light/5 to-transparent dark:from-background dark:via-primary-dark/5 dark:to-transparent"
+      className="py-20 bg-slate-50/80 dark:bg-background border-t border-slate-200/60"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Section Header & Slider Controls */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="max-w-2xl space-y-3">
+          <div className="space-y-3 max-w-2xl">
             <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
-              Honors & Achievements
+              Honors & Recognitions
             </h2>
             <div className="h-1 w-16 bg-accent rounded-full" />
-            <p className="text-base sm:text-lg text-foreground/70 dark:text-foreground/85">
-              Celebrating our students&apos; national awards, state athletic championships, and environmental honors.
+            <p className="text-base text-foreground/70 dark:text-foreground/85 leading-relaxed">
+              Celebrating exceptional student accomplishments in academics, competitive sports, and environmental leadership.
             </p>
           </div>
 
-          {/* Slide Controls */}
-          <div className="flex items-center gap-2 self-start md:self-end shrink-0">
+          {/* Slider Controls */}
+          <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={() => scroll("left")}
-              className="p-3 rounded-full bg-white dark:bg-zinc-800 shadow-md border border-slate-200/60 dark:border-zinc-700 text-slate-700 dark:text-slate-200 hover:bg-accent hover:text-white transition-all"
-              aria-label="Previous"
+              aria-label="Scroll achievements left"
+              className="p-3 rounded-full bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 shadow-sm hover:bg-accent hover:text-white dark:hover:bg-accent transition-all duration-200"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={() => scroll("right")}
-              className="p-3 rounded-full bg-white dark:bg-zinc-800 shadow-md border border-slate-200/60 dark:border-zinc-700 text-slate-700 dark:text-slate-200 hover:bg-accent hover:text-white transition-all"
-              aria-label="Next"
+              aria-label="Scroll achievements right"
+              className="p-3 rounded-full bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 shadow-sm hover:bg-accent hover:text-white dark:hover:bg-accent transition-all duration-200"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
         </div>
 
-        {/* 1-Row Horizontal Slide Bar */}
+        {/* Single Row Slider */}
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scrollbar-none scroll-smooth"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 -mx-4 px-4 sm:mx-0 sm:px-0"
         >
           {highlights.map((card, idx) => (
             <div
               key={idx}
-              className="w-[300px] sm:w-[350px] md:w-[380px] shrink-0 snap-center group relative rounded-3xl overflow-hidden border border-slate-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900/90 shadow-sm hover:shadow-xl hover:border-accent/40 transition-all duration-300 flex flex-col justify-between"
+              className="snap-start shrink-0 w-[300px] sm:w-[350px] md:w-[380px] group relative rounded-2xl overflow-hidden border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 shadow-sm hover:shadow-xl hover:border-accent/40 transition-all duration-300 flex flex-col justify-between"
             >
               {/* Image Area with category badge */}
               <div className="relative aspect-[16/10] overflow-hidden">
@@ -113,7 +119,7 @@ export default function Achievements({ initialHighlights }) {
                   src={card.image}
                   alt={card.title}
                   fill
-                  sizes="(max-width: 768px) 300px, 380px"
+                  sizes="(max-width: 768px) 80vw, 380px"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
@@ -125,8 +131,8 @@ export default function Achievements({ initialHighlights }) {
               </div>
 
               {/* Content details */}
-              <div className="p-6 flex flex-col justify-between flex-grow space-y-3">
-                <div className="space-y-2">
+              <div className="p-6 flex flex-col justify-between flex-grow">
+                <div className="space-y-3">
                   <div className="flex items-center gap-2 text-xs font-semibold text-foreground/60 dark:text-foreground/75">
                     <Calendar className="h-3.5 w-3.5 text-accent" />
                     <span>{card.year}</span>
@@ -136,17 +142,17 @@ export default function Achievements({ initialHighlights }) {
                     {card.title}
                   </h4>
 
-                  <p className="text-sm text-foreground/70 dark:text-foreground/80 leading-relaxed">
+                  <p className="text-sm text-foreground/70 dark:text-foreground/80 leading-relaxed line-clamp-3">
                     {card.description}
                   </p>
                 </div>
 
                 {/* Footer icon */}
-                <div className="pt-4 border-t border-slate-100 dark:border-zinc-800 mt-4 flex justify-between items-center">
+                <div className="pt-5 border-t border-slate-100 dark:border-zinc-800 mt-5 flex justify-between items-center">
                   <span className="text-xs font-semibold text-foreground/50 dark:text-foreground/60">
-                    Recognized Accolade
+                    Certified Accolade
                   </span>
-                  <div className="p-2 rounded-lg bg-accent/10">
+                  <div className="p-2 rounded-lg bg-accent-light dark:bg-accent/10">
                     {getIcon(card)}
                   </div>
                 </div>

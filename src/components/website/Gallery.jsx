@@ -8,7 +8,7 @@ export default function Gallery({ initialItems }) {
   const [selectedImageIdx, setSelectedImageIdx] = useState(null);
   const scrollRef = useRef(null);
 
-  const defaultItems = [
+  const items = initialItems && initialItems.length > 0 ? initialItems : [
     {
       title: "Annual Athletics Meet",
       album: "Sports Meet",
@@ -47,29 +47,30 @@ export default function Gallery({ initialItems }) {
     },
   ];
 
-  const items = initialItems && initialItems.length > 0 ? initialItems : defaultItems;
   const filteredItems = items.filter((item) => item.title && item.title.trim() !== "");
 
   const scroll = (direction) => {
     if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollAmount = clientWidth * 0.8;
-      scrollRef.current.scrollTo({
-        left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
+      const scrollAmount = 340;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
       });
     }
   };
 
   const handlePrev = useCallback(() => {
-    setSelectedImageIdx((prev) => (prev === 0 ? filteredItems.length - 1 : prev - 1));
+    setSelectedImageIdx((prev) => 
+      prev === 0 ? filteredItems.length - 1 : prev - 1
+    );
   }, [filteredItems]);
 
   const handleNext = useCallback(() => {
-    setSelectedImageIdx((prev) => (prev === filteredItems.length - 1 ? 0 : prev + 1));
+    setSelectedImageIdx((prev) => 
+      prev === filteredItems.length - 1 ? 0 : prev + 1
+    );
   }, [filteredItems]);
 
-  // Close lightbox on escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") setSelectedImageIdx(null);
@@ -89,63 +90,62 @@ export default function Gallery({ initialItems }) {
       className="py-20 bg-gradient-to-br from-slate-100/60 via-primary-light/5 to-transparent dark:from-background dark:via-primary-dark/5 dark:to-transparent"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Section Header & Slider Controls */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="max-w-2xl space-y-3">
+          <div className="space-y-3 max-w-2xl">
             <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
               Life at JOY E.M HIGH SCHOOL
             </h2>
             <div className="h-1 w-16 bg-accent rounded-full" />
-            <p className="text-base sm:text-lg text-foreground/70 dark:text-foreground/85">
-              A glimpse into the daily campus life, student initiatives, sports competitions, and cultural celebrations.
+            <p className="text-base text-foreground/70 dark:text-foreground/85 leading-relaxed">
+              A glimpse into the daily activities, student initiatives, sports competitions, and campus highlights that make our school a joyful community.
             </p>
           </div>
 
-          {/* Slide Controls */}
-          <div className="flex items-center gap-2 self-start md:self-end shrink-0">
+          {/* Slider Controls */}
+          <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={() => scroll("left")}
-              className="p-3 rounded-full bg-white dark:bg-zinc-800 shadow-md border border-slate-200/60 dark:border-zinc-700 text-slate-700 dark:text-slate-200 hover:bg-accent hover:text-white transition-all"
-              aria-label="Previous"
+              aria-label="Scroll gallery left"
+              className="p-3 rounded-full bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 shadow-sm hover:bg-accent hover:text-white dark:hover:bg-accent transition-all duration-200"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={() => scroll("right")}
-              className="p-3 rounded-full bg-white dark:bg-zinc-800 shadow-md border border-slate-200/60 dark:border-zinc-700 text-slate-700 dark:text-slate-200 hover:bg-accent hover:text-white transition-all"
-              aria-label="Next"
+              aria-label="Scroll gallery right"
+              className="p-3 rounded-full bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 shadow-sm hover:bg-accent hover:text-white dark:hover:bg-accent transition-all duration-200"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
         </div>
 
-        {/* 1-Row Horizontal Slide Bar */}
+        {/* Horizontal Slider (Single Row) */}
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scrollbar-none scroll-smooth"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 -mx-4 px-4 sm:mx-0 sm:px-0"
         >
           {filteredItems.map((item, idx) => (
             <div
               key={idx}
               onClick={() => setSelectedImageIdx(idx)}
-              className="w-[280px] sm:w-[320px] md:w-[350px] shrink-0 snap-center group relative aspect-[4/3] rounded-3xl overflow-hidden border border-slate-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm hover:shadow-xl hover:border-accent/40 cursor-pointer transition-all duration-300"
+              className="snap-start shrink-0 w-[270px] sm:w-[320px] md:w-[340px] group relative aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 shadow-sm hover:shadow-xl hover:border-accent/40 cursor-pointer transition-all duration-300"
             >
               <Image
                 src={item.image}
                 alt={item.title}
                 fill
-                sizes="(max-width: 768px) 280px, 350px"
+                sizes="(max-width: 640px) 80vw, 340px"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
               {/* Overlay and hover maximize icon */}
-              <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/90 via-primary-dark/35 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                <div className="absolute top-4 right-4 p-2.5 bg-white/20 rounded-xl text-white backdrop-blur-sm shadow-md">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
+                <div className="absolute top-4 right-4 p-2 bg-white/20 rounded-lg text-white backdrop-blur-sm">
                   <Maximize2 className="h-4 w-4" />
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold text-accent dark:text-accent uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-accent uppercase tracking-wider">
                     {item.album}
                   </span>
                   <h4 className="font-display text-base font-bold text-white leading-tight">
@@ -159,11 +159,7 @@ export default function Gallery({ initialItems }) {
 
         {/* Lightbox Modal */}
         {selectedImageIdx !== null && (
-          <div
-            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/90 backdrop-blur-md p-4"
-            onClick={() => setSelectedImageIdx(null)}
-          >
-            {/* Top Bar inside modal */}
+          <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/90 backdrop-blur-sm p-4">
             <div className="absolute top-4 right-4 z-[110] flex gap-4">
               <button
                 onClick={() => setSelectedImageIdx(null)}
@@ -174,55 +170,41 @@ export default function Gallery({ initialItems }) {
               </button>
             </div>
 
-            {/* Navigation Controls */}
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePrev();
-              }}
-              className="absolute left-4 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all focus:outline-none z-10"
+              onClick={handlePrev}
+              className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all focus:outline-none z-[110]"
               title="Previous"
             >
               <ChevronLeft className="h-6 w-6" />
             </button>
+
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleNext();
-              }}
-              className="absolute right-4 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all focus:outline-none z-10"
+              onClick={handleNext}
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all focus:outline-none z-[110]"
               title="Next"
             >
               <ChevronRight className="h-6 w-6" />
             </button>
 
-            {/* Modal Image Wrapper */}
-            <div
-              className="w-[85vw] h-[60vh] relative z-0"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className="relative max-w-4xl max-h-[80vh] w-full h-[60vh] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
               <Image
                 src={filteredItems[selectedImageIdx].image}
                 alt={filteredItems[selectedImageIdx].title}
                 fill
-                sizes="85vw"
+                sizes="(max-width: 1024px) 100vw, 80vw"
                 className="object-contain"
               />
             </div>
 
-            {/* Caption in Lightbox */}
-            <div
-              className="mt-6 text-center max-w-2xl px-4 z-10"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <span className="text-xs font-bold text-accent uppercase tracking-widest block mb-1">
+            <div className="mt-4 text-center text-white max-w-xl">
+              <span className="text-xs font-bold text-accent uppercase tracking-wider block mb-1">
                 {filteredItems[selectedImageIdx].album}
               </span>
-              <h3 className="font-display text-xl sm:text-2xl font-extrabold text-white">
+              <h3 className="font-display text-xl font-bold">
                 {filteredItems[selectedImageIdx].title}
               </h3>
               {filteredItems[selectedImageIdx].description && (
-                <p className="text-sm text-slate-300 mt-2">
+                <p className="text-sm text-slate-300 mt-1">
                   {filteredItems[selectedImageIdx].description}
                 </p>
               )}

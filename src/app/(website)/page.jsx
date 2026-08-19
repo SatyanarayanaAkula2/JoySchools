@@ -14,7 +14,6 @@ import Footer from "@/components/website/Footer";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  let facultyData = [];
   let galleryData = [];
   let achievementData = [];
   let eventData = [];
@@ -24,8 +23,7 @@ export default async function Home() {
   try {
     const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_URL || "https://joyschools-p2xb.onrender.com").replace(/\/+$/, "");
     
-    const [resFaculty, resGallery, resAchievements, resEvents, resMilestones, resSettings] = await Promise.all([
-      fetch(`${backendUrl}/api/faculty`, { cache: "no-store" }).then((r) => r.json()),
+    const [resGallery, resAchievements, resEvents, resMilestones, resSettings] = await Promise.all([
       fetch(`${backendUrl}/api/gallery`, { cache: "no-store" }).then((r) => r.json()),
       fetch(`${backendUrl}/api/achievements`, { cache: "no-store" }).then((r) => r.json()),
       fetch(`${backendUrl}/api/events`, { cache: "no-store" }).then((r) => r.json()),
@@ -33,7 +31,6 @@ export default async function Home() {
       fetch(`${backendUrl}/api/settings`, { cache: "no-store" }).then((r) => r.json()),
     ]);
 
-    facultyData = resFaculty.faculty || [];
     galleryData = resGallery.gallery || [];
     achievementData = resAchievements.achievements || [];
     eventData = resEvents.events || [];
@@ -49,34 +46,34 @@ export default async function Home() {
       <Navbar />
 
       <main className="flex-grow">
-        {/* 1. Hero Section */}
+        {/* Hero Section */}
         <Hero slideImages={settingsData.heroSlides} />
 
-        {/* 2. Inspirational Quote Banner */}
+        {/* Inspirational Quote Banner */}
         <QuoteBanner />
 
-        {/* 3. About: Mission & Vision */}
+        {/* About: Mission & Vision */}
         <MissionVision adminImage={settingsData.adminImage} />
 
-        {/* 4. Academics: Curriculum & Classes */}
+        {/* Academics: Curriculum & Classes */}
         <ClassesOffering />
 
-        {/* 5. Holistic Development Programs (Co-curriculars, sports, arts) */}
+        {/* Holistic Development Programs (Single-Row Slider) */}
         <Activities />
 
-        {/* 6. Events & Dates Calendar Section */}
-        <EventsSection initialEvents={eventData} />
+        {/* Upcoming Events & School Calendar (Single-Row Slider) */}
+        <EventsSection events={eventData} />
 
-        {/* 7. Honors & Achievements */}
+        {/* Accolades & Achievements (Single-Row Slider) */}
         <Achievements initialHighlights={achievementData} />
 
-        {/* 8. Legacy Milestones (Right BEFORE Gallery) */}
-        <MilestonesSection initialStats={milestoneData} />
+        {/* Milestones Stats Strip (Positioned immediately before Gallery) */}
+        <MilestonesSection stats={milestoneData} />
 
-        {/* 9. Visual Media Gallery Tour */}
+        {/* Media Tour: Event Photo Gallery (Single-Row Slider) */}
         <Gallery initialItems={galleryData} />
 
-        {/* 10. Inquiry Hub: Admissions & Contact Form */}
+        {/* Inquiry Hub: Contact Details and Form */}
         <Contact settings={settingsData} />
       </main>
 

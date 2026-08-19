@@ -23,7 +23,6 @@ export async function editSettings(req, res) {
       instagram: req.body.instagram !== undefined ? req.body.instagram : current.instagram,
       twitter: req.body.twitter !== undefined ? req.body.twitter : current.twitter,
       youtube: req.body.youtube !== undefined ? req.body.youtube : current.youtube,
-      mapEmbedUrl: req.body.mapEmbedUrl !== undefined ? req.body.mapEmbedUrl : current.mapEmbedUrl,
     };
 
     // Handle single admin image upload

@@ -4,10 +4,10 @@ import { useRef } from "react";
 import { Trophy, Music, Cpu, Palette, MessageSquare, Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
-export default function Activities() {
+export default function Activities({ initialActivities }) {
   const scrollRef = useRef(null);
 
-  const activities = [
+  const fallbackActivities = [
     {
       title: "Sports & Athletics",
       icon: <Trophy className="h-6 w-6 text-white" />,
@@ -26,7 +26,7 @@ export default function Activities() {
       title: "STEM & Robotics Club",
       icon: <Cpu className="h-6 w-6 text-white" />,
       image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=500&q=80",
-      description: "Hands-on engineering workshops, robotics design, visual programming languages, and scientific research competitions.",
+      description: "Hands-on engineering workshops, robotics design, visual programming languages (Scratch), and scientific research competitions.",
       accentBg: "bg-sky-600",
     },
     {
@@ -52,12 +52,42 @@ export default function Activities() {
     },
   ];
 
+  const getMeta = (category) => {
+    const cat = (category || "").toLowerCase();
+    switch (cat) {
+      case "sports":
+        return { icon: <Trophy className="h-6 w-6 text-white" />, accentBg: "bg-emerald-600" };
+      case "co-curricular":
+        return { icon: <Music className="h-6 w-6 text-white" />, accentBg: "bg-indigo-600" };
+      case "academic":
+        return { icon: <Cpu className="h-6 w-6 text-white" />, accentBg: "bg-sky-600" };
+      case "achievement":
+        return { icon: <Trophy className="h-6 w-6 text-white" />, accentBg: "bg-rose-500" };
+      case "holiday":
+        return { icon: <Heart className="h-6 w-6 text-white" />, accentBg: "bg-amber-600" };
+      default:
+        return { icon: <Palette className="h-6 w-6 text-white" />, accentBg: "bg-rose-500" };
+    }
+  };
+
+  const activities = initialActivities && initialActivities.length > 0
+    ? initialActivities.map((act) => {
+        const meta = getMeta(act.category);
+        return {
+          title: act.title,
+          image: act.image || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=500&q=80",
+          description: act.description,
+          icon: meta.icon,
+          accentBg: meta.accentBg,
+        };
+      })
+    : fallbackActivities;
+
   const scroll = (direction) => {
     if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollAmount = clientWidth * 0.8;
-      scrollRef.current.scrollTo({
-        left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
+      const scrollAmount = 380;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
       });
     }
@@ -69,47 +99,46 @@ export default function Activities() {
       className="py-20 bg-gradient-to-br from-primary-light/10 via-slate-100/50 to-transparent dark:from-primary-dark/5 dark:via-background dark:to-transparent"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Section Header with Navigation Arrows */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="max-w-2xl space-y-3">
+          <div className="space-y-3 max-w-2xl">
             <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary dark:text-white tracking-tight">
               Holistic Development Programs
             </h2>
             <div className="h-1 w-16 bg-accent rounded-full" />
-            <p className="text-base sm:text-lg text-foreground/70 dark:text-foreground/85">
-              Education at JOY E.M HIGH SCHOOL goes beyond classroom walls. We offer a rich variety of co-curricular activities designed to discover and nurture every child&apos;s talent.
+            <p className="text-base text-foreground/70 dark:text-foreground/85 leading-relaxed">
+              Education at JOY E.M HIGH SCHOOL goes beyond classroom walls. We offer a rich variety of extra-curricular activities designed to discover and nurture every child&apos;s talent.
             </p>
           </div>
 
-          {/* Slide Controls */}
-          <div className="flex items-center gap-2 self-start md:self-end shrink-0">
+          {/* Slider Controls */}
+          <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={() => scroll("left")}
-              className="p-3 rounded-full bg-white dark:bg-zinc-800 shadow-md border border-slate-200/60 dark:border-zinc-700 text-slate-700 dark:text-slate-200 hover:bg-accent hover:text-white transition-all"
-              aria-label="Slide Left"
+              aria-label="Scroll left"
+              className="p-3 rounded-full bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 shadow-sm hover:bg-accent hover:text-white dark:hover:bg-accent transition-all duration-200"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={() => scroll("right")}
-              className="p-3 rounded-full bg-white dark:bg-zinc-800 shadow-md border border-slate-200/60 dark:border-zinc-700 text-slate-700 dark:text-slate-200 hover:bg-accent hover:text-white transition-all"
-              aria-label="Slide Right"
+              aria-label="Scroll right"
+              className="p-3 rounded-full bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 shadow-sm hover:bg-accent hover:text-white dark:hover:bg-accent transition-all duration-200"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
         </div>
 
-        {/* 1-Row Horizontal Slide Bar */}
+        {/* Horizontal Slider (Single Row) */}
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scrollbar-none scroll-smooth"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 -mx-4 px-4 sm:mx-0 sm:px-0"
         >
           {activities.map((act, idx) => (
             <div
               key={idx}
-              className="w-[300px] sm:w-[350px] md:w-[380px] shrink-0 snap-center group relative rounded-3xl overflow-hidden border border-slate-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900/90 shadow-sm hover:shadow-xl hover:border-accent/40 transition-all duration-300 flex flex-col justify-between"
+              className="snap-start shrink-0 w-[300px] sm:w-[350px] md:w-[380px] group relative rounded-2xl overflow-hidden border border-slate-200/80 dark:border-primary/10 bg-white dark:bg-primary-dark/15 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col justify-between"
             >
               {/* Image Banner */}
               <div className="relative aspect-[16/10] overflow-hidden">
@@ -117,24 +146,26 @@ export default function Activities() {
                   src={act.image}
                   alt={act.title}
                   fill
-                  sizes="(max-width: 768px) 300px, 380px"
+                  sizes="(max-width: 768px) 80vw, 380px"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 
                 {/* Floating Icon */}
-                <div className={`absolute -bottom-4 right-6 p-3 rounded-2xl shadow-lg ${act.accentBg} transition-transform duration-300 group-hover:scale-110`}>
+                <div className={`absolute -bottom-5 right-6 p-3.5 rounded-2xl shadow-lg ${act.accentBg} transition-transform duration-300 group-hover:scale-110`}>
                   {act.icon}
                 </div>
               </div>
 
-              {/* Text Area without Dates */}
-              <div className="p-6 pt-7 flex flex-col justify-between flex-grow space-y-3">
-                <h3 className="font-display text-xl font-bold text-primary dark:text-white group-hover:text-accent transition-colors duration-200">
-                  {act.title}
-                </h3>
-                <p className="text-sm text-foreground/70 dark:text-foreground/80 leading-relaxed">
-                  {act.description}
-                </p>
+              {/* Text Area */}
+              <div className="p-6 pt-8 flex flex-col justify-between flex-grow">
+                <div className="space-y-2">
+                  <h3 className="font-display text-xl font-bold text-primary dark:text-white group-hover:text-accent transition-colors duration-200">
+                    {act.title}
+                  </h3>
+                  <p className="text-sm text-foreground/70 dark:text-foreground/80 leading-relaxed">
+                    {act.description}
+                  </p>
+                </div>
               </div>
             </div>
           ))}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import AdminLayoutWrapper from "@/components/admin/AdminLayoutWrapper";
-import { Loader2, Save, Globe, Phone, Image as ImageIcon, Upload, MapPin, ExternalLink, HelpCircle } from "lucide-react";
+import { Loader2, Save, Globe, Phone, Image as ImageIcon, Upload } from "lucide-react";
 import Image from "next/image";
 
 export default function AdminSettingsPage() {
@@ -14,7 +14,6 @@ export default function AdminSettingsPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [mapEmbedUrl, setMapEmbedUrl] = useState("");
   
   const [facebook, setFacebook] = useState("");
   const [instagram, setInstagram] = useState("");
@@ -44,7 +43,6 @@ export default function AdminSettingsPage() {
           setEmail(s.email || "");
           setPhone(s.phone || "");
           setAddress(s.address || "");
-          setMapEmbedUrl(s.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.9265147814876!2d77.62193527589999!3d12.976594214751433!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1680d22c0389%3A0x7d028b030e427187!2sBengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin");
           setFacebook(s.facebook || "");
           setInstagram(s.instagram || "");
           setTwitter(s.twitter || "");
@@ -54,6 +52,7 @@ export default function AdminSettingsPage() {
           setAdminImagePreview(s.adminImage || "");
 
           const slides = s.heroSlides || ["", "", "", ""];
+          // Ensure length is 4
           while (slides.length < 4) slides.push("");
           setExistingHeroSlides(slides);
           setHeroSlidePreviews(slides);
@@ -88,24 +87,6 @@ export default function AdminSettingsPage() {
     }
   };
 
-  // Helper to sanitize Google Maps input (if user pastes raw iframe code or direct URL)
-  const sanitizeMapUrl = (input) => {
-    if (!input) return "";
-    const trimmed = input.trim();
-    // If user pasted `<iframe ... src="..." ...></iframe>`
-    const match = trimmed.match(/src=["']([^"']+)["']/i);
-    if (match && match[1]) {
-      return match[1];
-    }
-    return trimmed;
-  };
-
-  const handleMapInputChange = (e) => {
-    const rawVal = e.target.value;
-    const sanitized = sanitizeMapUrl(rawVal);
-    setMapEmbedUrl(sanitized);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -115,7 +96,6 @@ export default function AdminSettingsPage() {
       formData.append("email", email);
       formData.append("phone", phone);
       formData.append("address", address);
-      formData.append("mapEmbedUrl", sanitizeMapUrl(mapEmbedUrl));
       formData.append("facebook", facebook);
       formData.append("instagram", instagram);
       formData.append("twitter", twitter);
@@ -146,11 +126,11 @@ export default function AdminSettingsPage() {
       if (data.success) {
         alert("Configuration settings updated successfully!");
         
+        // Refresh local states with fresh data from server
         const s = data.settings;
         setEmail(s.email || "");
         setPhone(s.phone || "");
         setAddress(s.address || "");
-        setMapEmbedUrl(s.mapEmbedUrl || "");
         setFacebook(s.facebook || "");
         setInstagram(s.instagram || "");
         setTwitter(s.twitter || "");
@@ -162,6 +142,7 @@ export default function AdminSettingsPage() {
         setExistingHeroSlides(slides);
         setHeroSlidePreviews(slides);
         
+        // Clear file buffers
         setAdminImageFile(null);
         setHeroSlideFiles([null, null, null, null]);
       } else {
@@ -178,7 +159,6 @@ export default function AdminSettingsPage() {
   const tabs = [
     { id: "general", name: "General & Branding", icon: ImageIcon },
     { id: "contact", name: "Contact Details", icon: Phone },
-    { id: "map", name: "Google Map Location", icon: MapPin },
     { id: "social", name: "Social Links", icon: Globe },
   ];
 
@@ -186,8 +166,8 @@ export default function AdminSettingsPage() {
     <AdminLayoutWrapper title="School Configuration Settings">
       <div className="space-y-6">
         <div className="flex flex-col space-y-2">
-          <p className="text-slate-500 dark:text-zinc-400 text-sm">
-            Configure school identity details, support helpline channels, Google Map location pin, and external social links. Changes reflect on the landing page immediately.
+          <p className="text-slate-455 dark:text-zinc-400 text-sm">
+            Configure school identity details, support helpline channels, map location pins, and external social media hyperlinks. Changes take effect on the landing page immediately.
           </p>
         </div>
 
@@ -240,34 +220,33 @@ export default function AdminSettingsPage() {
                         <div className="relative w-32 aspect-square rounded-2xl overflow-hidden border border-slate-200 dark:border-zinc-800 shadow-sm shrink-0">
                           <Image
                             src={adminImagePreview}
-                            alt="Administrator preview"
+                            alt="Administrator"
                             fill
+                            sizes="128px"
                             className="object-cover"
                           />
                         </div>
                       )}
-                      
-                      <div className="space-y-2 w-full">
-                        <label className="cursor-pointer inline-flex items-center space-x-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-zinc-300 shadow-sm transition-all duration-200">
-                          <Upload className="h-4 w-4 text-accent" />
-                          <span>Choose New Administrator Photo</span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleAdminImageChange}
-                            className="hidden"
-                          />
-                        </label>
-                        <p className="text-[11px] text-slate-400">Recommended: Square format 1:1, JPG or PNG format.</p>
-                      </div>
+                      <label className="cursor-pointer bg-slate-550 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 hover:bg-slate-100/50 dark:hover:bg-zinc-900/50 px-5 py-3 rounded-2xl text-xs font-bold text-slate-700 dark:text-zinc-300 shadow-sm transition-all duration-200 flex items-center space-x-2">
+                        <Upload className="h-4 w-4" />
+                        <span>Upload Administrator Photo</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleAdminImageChange}
+                          className="hidden"
+                        />
+                      </label>
                     </div>
                   </div>
 
-                  <div className="border-t border-slate-100 dark:border-zinc-800 pt-6">
-                    <h3 className="font-bold text-slate-800 dark:text-white text-base">Homepage Hero Carousel Slides</h3>
-                    <p className="text-xs text-slate-400 mt-0.5">Upload up to 4 featured campus images displayed in the rotating hero banner.</p>
+                  <hr className="border-slate-100 dark:border-zinc-850" />
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                  <div>
+                    <h3 className="font-bold text-slate-800 dark:text-white text-base">Homepage Image Carousel Slides</h3>
+                    <p className="text-xs text-slate-400 mt-0.5">Upload 4 custom sliding images to showcase student classes, sports, labs, and library.</p>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
                       {[0, 1, 2, 3].map((idx) => (
                         <div key={idx} className="border border-slate-200 dark:border-zinc-800 rounded-2xl p-4 bg-slate-50/50 dark:bg-zinc-950/20 space-y-4">
                           <div className="flex items-center justify-between">
@@ -285,12 +264,12 @@ export default function AdminSettingsPage() {
                               />
                             </div>
                           ) : (
-                            <div className="w-full aspect-[16/10] bg-slate-100 dark:bg-zinc-900 rounded-xl flex items-center justify-center text-slate-400 border border-slate-200 dark:border-zinc-800">
+                            <div className="w-full aspect-[16/10] bg-slate-100 dark:bg-zinc-900 rounded-xl flex items-center justify-center text-slate-400 border border-slate-250 dark:border-zinc-800">
                               <ImageIcon className="h-6 w-6" />
                             </div>
                           )}
 
-                          <label className="cursor-pointer w-full bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-50 px-4 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-zinc-300 shadow-sm transition-all duration-200 flex items-center justify-center space-x-1.5">
+                          <label className="cursor-pointer w-full bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-50 px-4 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-zinc-350 shadow-sm transition-all duration-200 flex items-center justify-center space-x-1.5">
                             <Upload className="h-3.5 w-3.5" />
                             <span>Select Image</span>
                             <input
@@ -361,66 +340,7 @@ export default function AdminSettingsPage() {
                 </div>
               )}
 
-              {/* TAB 3: Google Map Location */}
-              {activeTab === "map" && (
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="font-bold text-slate-800 dark:text-white text-base">Google Map Campus Location</h3>
-                    <p className="text-xs text-slate-400 mt-0.5">Embed your exact school campus location pin on Google Maps.</p>
-                  </div>
-
-                  {/* Step by step guide card */}
-                  <div className="p-5 rounded-2xl bg-sky-50/70 dark:bg-sky-950/20 border border-sky-200/70 dark:border-sky-900/40 space-y-3">
-                    <div className="flex items-center gap-2 text-sky-800 dark:text-sky-300 font-bold text-sm">
-                      <HelpCircle className="h-4 w-4" />
-                      <span>How to get your School&apos;s Google Map Embed Link:</span>
-                    </div>
-                    <ol className="text-xs text-slate-600 dark:text-slate-300 space-y-1.5 list-decimal list-inside leading-relaxed">
-                      <li>Go to <a href="https://maps.google.com" target="_blank" rel="noreferrer" className="text-accent underline font-bold inline-flex items-center gap-1">Google Maps <ExternalLink className="h-3 w-3 inline" /></a> and search for your school name or exact address.</li>
-                      <li>Click the <strong>Share</strong> button on the left sidebar.</li>
-                      <li>In the popup window, switch to the <strong>&quot;Embed a map&quot;</strong> tab.</li>
-                      <li>Click <strong>&quot;COPY HTML&quot;</strong> and paste the copied code directly into the box below! (Our system will automatically extract the clean embed URL).</li>
-                    </ol>
-                  </div>
-
-                  {/* Input field */}
-                  <div>
-                    <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-1">
-                      Google Maps Embed Link / Iframe Code
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={mapEmbedUrl}
-                      onChange={handleMapInputChange}
-                      placeholder="Paste your copied Google Maps Embed HTML or URL here (e.g., https://www.google.com/maps/embed?pb=...)"
-                      className="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-850 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-accent text-slate-800 dark:text-white"
-                    />
-                  </div>
-
-                  {/* Live Map Preview */}
-                  {mapEmbedUrl && (
-                    <div className="space-y-2">
-                      <span className="block text-xs font-extrabold uppercase tracking-wider text-slate-500">
-                        Live Map Preview (How it appears on website):
-                      </span>
-                      <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-zinc-800 shadow-md">
-                        <iframe
-                          src={mapEmbedUrl}
-                          width="100%"
-                          height="100%"
-                          style={{ border: 0 }}
-                          allowFullScreen=""
-                          loading="lazy"
-                          referrerPolicy="no-referrer-when-downgrade"
-                          title="School Location Map Preview"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* TAB 4: Social Links */}
+              {/* TAB 3: Social Links */}
               {activeTab === "social" && (
                 <div className="space-y-6">
                   <div>
