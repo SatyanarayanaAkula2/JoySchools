@@ -20,13 +20,11 @@ export default function MilestonesSection({ stats }) {
       <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-10 space-y-2">
-          <h2 className="font-display text-xs font-bold text-accent-light uppercase tracking-widest">
+        <div className="text-center max-w-3xl mx-auto mb-10">
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Milestones
           </h2>
-          <p className="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Our Proudest Achievements
-          </p>
+          <div className="h-1 w-16 bg-accent-light mx-auto rounded-full mt-3" />
         </div>
 
         {/* Stats Grid */}
