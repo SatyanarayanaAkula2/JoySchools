@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Quote, Sparkles } from "lucide-react";
 
-export default function MissionVision() {
+export default function MissionVision({ adminImage }) {
   return (
     <section
       id="about"
@@ -38,7 +38,7 @@ export default function MissionVision() {
             {/* Principal Photo Card */}
             <div className="relative z-10 w-full max-w-md aspect-square rounded-3xl overflow-hidden border-4 border-white dark:border-primary-dark shadow-2xl transition-transform duration-500 hover:scale-[1.02]">
               <Image
-                src="/school_administrator.jpg"
+                src={adminImage || "/school_administrator.jpg"}
                 alt="JOY E.M HIGH SCHOOL Administrator"
                 fill
                 sizes="(max-width: 768px) 100vw, 40vw"

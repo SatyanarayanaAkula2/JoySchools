@@ -2,7 +2,7 @@
 
 import { GraduationCap, Mail, Phone, MapPin, ArrowUp } from "lucide-react";
 
-export default function Footer() {
+export default function Footer({ settings }) {
   const handleScrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) {
@@ -26,7 +26,7 @@ export default function Footer() {
                 <GraduationCap className="h-6 w-6" />
               </div>
               <span className="font-display text-xl font-black tracking-tight uppercase">
-                JOY E.M <span className="text-accent">HIGH SCHOOL</span>
+                 JOY E.M <span className="text-accent">HIGH SCHOOL</span>
               </span>
             </div>
             
@@ -44,7 +44,9 @@ export default function Footer() {
                     </svg>
                   ),
                   label: "Facebook",
-                  href: "#",
+                  href: settings?.facebook || "#",
+                  target: settings?.facebook ? "_blank" : undefined,
+                  rel: settings?.facebook ? "noopener noreferrer" : undefined,
                 },
                 {
                   icon: (
@@ -55,7 +57,7 @@ export default function Footer() {
                     </svg>
                   ),
                   label: "Instagram",
-                  href: "https://www.instagram.com/joy_em_high_school/",
+                  href: settings?.instagram || "https://www.instagram.com/joy_em_high_school/",
                   target: "_blank",
                   rel: "noopener noreferrer",
                 },
@@ -66,7 +68,9 @@ export default function Footer() {
                     </svg>
                   ),
                   label: "Twitter",
-                  href: "#",
+                  href: settings?.twitter || "#",
+                  target: settings?.twitter ? "_blank" : undefined,
+                  rel: settings?.twitter ? "noopener noreferrer" : undefined,
                 },
                 {
                   icon: (
@@ -75,7 +79,9 @@ export default function Footer() {
                     </svg>
                   ),
                   label: "Youtube",
-                  href: "#",
+                  href: settings?.youtube || "#",
+                  target: settings?.youtube ? "_blank" : undefined,
+                  rel: settings?.youtube ? "noopener noreferrer" : undefined,
                 },
               ].map((item, idx) => (
                 <a
@@ -105,10 +111,11 @@ export default function Footer() {
                 { name: "Home", id: "hero" },
                 { name: "About Us", id: "about" },
                 { name: "Academics", id: "classes" },
-                { name: "Faculty", id: "faculty" },
+                // { name: "Faculty", id: "faculty" },
                 { name: "Clubs & Activities", id: "activities" },
                 { name: "Milestones", id: "achievements" },
                 { name: "Gallery", id: "gallery" },
+                { name: "Contact", id: "contact" },
               ].map((link, idx) => (
                 <li key={idx}>
                   <button
@@ -159,15 +166,15 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-gray-300">
               <li className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 text-accent mt-1 flex-shrink-0" />
-                <span>108 Joy Hills Road, Sector 4, Bangalore, 560034</span>
+                <span className="whitespace-pre-line">{settings?.address || "108 Joy Hills Road, Sector 4, Bangalore, 560034"}</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-accent flex-shrink-0" />
-                <span>+91 80 4321 8765</span>
+                <span className="whitespace-pre-line">{settings?.phone ? settings.phone.split("\n")[0] : "+91 80 4321 8765"}</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-accent flex-shrink-0" />
-                <span>info@joyemhighschool.edu</span>
+                <span className="whitespace-pre-line">{settings?.email ? settings.email.split("\n")[0] : "info@joyemhighschool.edu"}</span>
               </li>
             </ul>
 

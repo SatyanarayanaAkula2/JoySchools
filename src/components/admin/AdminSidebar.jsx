@@ -11,6 +11,8 @@ import {
   Trophy,
   School,
   ChevronRight,
+  Milestone,
+  Settings,
 } from "lucide-react";
 
 export default function AdminSidebar() {
@@ -23,6 +25,8 @@ export default function AdminSidebar() {
     { name: "Events", href: "/admin/events", icon: Calendar, desc: "School Calendar" },
     { name: "Gallery", href: "/admin/gallery", icon: ImageIcon, desc: "Media Uploads" },
     { name: "Achievements", href: "/admin/achievements", icon: Trophy, desc: "Awards Log" },
+    { name: "Milestones", href: "/admin/milestones", icon: Milestone, desc: "Legacy Stats" },
+    { name: "Settings", href: "/admin/settings", icon: Settings, desc: "School Info" },
   ];
 
   return (

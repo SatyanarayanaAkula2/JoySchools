@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
-export default function Hero() {
+export default function Hero({ slideImages }) {
   const handleScrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) {
@@ -11,7 +11,7 @@ export default function Hero() {
     }
   };
 
-  const sliderImages = [
+  const defaultSlides = [
     {
       src: "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80",
       alt: "Children learning in a modern classroom at JOY E.M HIGH SCHOOL",
@@ -30,6 +30,10 @@ export default function Hero() {
     },
   ];
 
+  const sliderImages = slideImages && slideImages.length > 0
+    ? slideImages.map((src, idx) => ({ src, alt: `School slider image ${idx + 1}` }))
+    : defaultSlides;
+
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -44,11 +48,17 @@ export default function Hero() {
       id="hero"
       className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-br from-primary-light via-white to-accent-light/30 dark:from-primary-dark/20 dark:via-background dark:to-accent-dark/5"
     >
+      {/* Background Image with Overlay */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-[0.28] dark:opacity-[0.16] pointer-events-none"
+        style={{ backgroundImage: "url('/school_bg.jpg')" }}
+      />
+
       {/* Decorative Background Shapes */}
       <div className="absolute top-20 -left-20 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute bottom-10 -right-20 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Text Column */}
           <div className="lg:col-span-7 flex flex-col items-start space-y-6 text-left animate-fade-in-up">

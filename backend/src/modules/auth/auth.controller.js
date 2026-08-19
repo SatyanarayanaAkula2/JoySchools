@@ -1,4 +1,4 @@
-import { loginAdmin, revokeRefreshToken, handleRefreshToken } from "./auth.service.js";
+import { loginAdmin, revokeRefreshToken, handleRefreshToken, getAdminSecurityQuestion, resetPasswordWithSecurityQuestion } from "./auth.service.js";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -116,6 +116,28 @@ export async function refreshAndRedirect(req, res) {
   } catch (error) {
     console.error("Refresh and redirect controller error:", error);
     return res.redirect("/admin/login");
+  }
+}
+
+export async function retrieveSecurityQuestion(req, res) {
+  try {
+    const { username } = req.validatedBody;
+    const question = await getAdminSecurityQuestion(username);
+    return res.status(200).json({ success: true, question });
+  } catch (error) {
+    console.error("retrieveSecurityQuestion controller error:", error);
+    return res.status(400).json({ success: false, error: error.message || "Failed to retrieve security question." });
+  }
+}
+
+export async function resetPassword(req, res) {
+  try {
+    const { username, answer, newPassword } = req.validatedBody;
+    await resetPasswordWithSecurityQuestion(username, answer, newPassword);
+    return res.status(200).json({ success: true, message: "Password has been reset successfully." });
+  } catch (error) {
+    console.error("resetPassword controller error:", error);
+    return res.status(400).json({ success: false, error: error.message || "Failed to reset password." });
   }
 }
 

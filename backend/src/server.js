@@ -12,6 +12,17 @@ import facultyRoutes from "./modules/faculty/faculty.routes.js";
 import eventRoutes from "./modules/event/event.routes.js";
 import galleryRoutes from "./modules/gallery/gallery.routes.js";
 import achievementRoutes from "./modules/achievement/achievement.routes.js";
+import milestoneRoutes from "./modules/milestone/milestone.routes.js";
+import { seedInitialMilestones } from "./modules/milestone/milestone.service.js";
+import settingRoutes from "./modules/setting/setting.routes.js";
+
+import dns from "dns/promises";
+
+// Use Google Public DNS
+dns.setServers([
+    "8.8.8.8",
+    "8.8.4.4"
+]);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -43,7 +54,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Database Connection
-dbConnect();
+dbConnect().then(() => {
+  seedInitialMilestones();
+});
 
 // API Routes
 app.use("/api/auth", authRoutes);
@@ -52,6 +65,8 @@ app.use("/api/faculty", facultyRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/achievements", achievementRoutes);
+app.use("/api/milestones", milestoneRoutes);
+app.use("/api/settings", settingRoutes);
 
 // Health Check / Ping
 app.get("/api/health", (req, res) => {

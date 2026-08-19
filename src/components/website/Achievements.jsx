@@ -3,8 +3,8 @@
 import { Award, Trophy, Leaf, Star, Calendar } from "lucide-react";
 import Image from "next/image";
 
-export default function Achievements({ initialHighlights }) {
-  const stats = [
+export default function Achievements({ initialHighlights, initialStats }) {
+  const stats = initialStats && initialStats.length > 0 ? initialStats : [
     { value: "15+", label: "Years of Educational Legacy", icon: "🏫" },
     { value: "100%", label: "State Board Pass Rate", icon: "🎓" },
     { value: "35+", label: "Sports & Cultural Trophies", icon: "🏆" },

@@ -18,21 +18,27 @@ export default async function Home() {
   let galleryData = [];
   let achievementData = [];
   let eventData = [];
+  let milestoneData = [];
+  let settingsData = {};
 
   try {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
     
-    const [resFaculty, resGallery, resAchievements, resEvents] = await Promise.all([
+    const [resFaculty, resGallery, resAchievements, resEvents, resMilestones, resSettings] = await Promise.all([
       fetch(`${backendUrl}/api/faculty`, { cache: "no-store" }).then((r) => r.json()),
       fetch(`${backendUrl}/api/gallery`, { cache: "no-store" }).then((r) => r.json()),
       fetch(`${backendUrl}/api/achievements`, { cache: "no-store" }).then((r) => r.json()),
       fetch(`${backendUrl}/api/events`, { cache: "no-store" }).then((r) => r.json()),
+      fetch(`${backendUrl}/api/milestones`, { cache: "no-store" }).then((r) => r.json()),
+      fetch(`${backendUrl}/api/settings`, { cache: "no-store" }).then((r) => r.json()),
     ]);
 
     facultyData = resFaculty.faculty || [];
     galleryData = resGallery.gallery || [];
     achievementData = resAchievements.achievements || [];
     eventData = resEvents.events || [];
+    milestoneData = resMilestones.milestones || [];
+    settingsData = resSettings.settings || {};
   } catch (error) {
     console.warn("Failed to load homepage dynamic records from Express backend, using placeholders:", error);
   }
@@ -45,35 +51,36 @@ export default async function Home() {
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <Hero />
+        <Hero slideImages={settingsData.heroSlides} />
 
         {/* Inspirational Quote Banner */}
         <QuoteBanner />
 
         {/* About: Mission & Vision */}
-        <MissionVision />
+        <MissionVision adminImage={settingsData.adminImage} />
 
         {/* Academics: Curriculum & Classes */}
         <ClassesOffering />
 
-        {/* Mentor Directory: Faculty Members (Dynamic) */}
+        {/* Mentor Directory: Faculty Members (Dynamic) (Hidden for future use)
         <Faculty initialStaff={facultyData} />
+        */}
 
         {/* Co-curriculars: Clubs & Sports */}
         <Activities initialEvents={eventData} />
 
         {/* Milestones: Achievements Dashboard (Dynamic) */}
-        <Achievements initialHighlights={achievementData} />
+        <Achievements initialHighlights={achievementData} initialStats={milestoneData} />
 
         {/* Media Tour: Event Photo Gallery (Dynamic) */}
         <Gallery initialItems={galleryData} />
 
         {/* Inquiry Hub: Contact Details and Form */}
-        <Contact />
+        <Contact settings={settingsData} />
       </main>
 
       {/* Footer Navigation & Credits */}
-      <Footer />
+      <Footer settings={settingsData} />
     </div>
   );
 }

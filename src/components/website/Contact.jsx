@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle2 } from "lucide-react";
 
-export default function Contact() {
+export default function Contact({ settings }) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -80,9 +80,8 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-bold text-sm text-primary dark:text-white uppercase tracking-wider">Campus Address</h4>
-                  <p className="text-sm text-foreground/75 dark:text-foreground/80 mt-1 leading-relaxed">
-                    108 Joy Hills Road, Sector 4,<br />
-                    Bangalore, KA, India - 560034
+                  <p className="text-sm text-foreground/75 dark:text-foreground/80 mt-1 leading-relaxed whitespace-pre-line">
+                    {settings?.address || "108 Joy Hills Road, Sector 4,\nBangalore, KA, India - 560034"}
                   </p>
                 </div>
               </div>
@@ -94,9 +93,8 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-bold text-sm text-primary dark:text-white uppercase tracking-wider">Phone Lines</h4>
-                  <p className="text-sm text-foreground/75 dark:text-foreground/80 mt-1">
-                    Admissions Desk: +91 80 4321 8765<br />
-                    Front Office Support: +91 98765 43210
+                  <p className="text-sm text-foreground/75 dark:text-foreground/80 mt-1 whitespace-pre-line">
+                    {settings?.phone || "Admissions Desk: +91 80 4321 8765\nFront Office Support: +91 98765 43210"}
                   </p>
                 </div>
               </div>
@@ -108,9 +106,8 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-bold text-sm text-primary dark:text-white uppercase tracking-wider">Electronic Mail</h4>
-                  <p className="text-sm text-foreground/75 dark:text-foreground/80 mt-1">
-                    Admissions: admissions@joyemhighschool.edu<br />
-                    General Info: info@joyemhighschool.edu
+                  <p className="text-sm text-foreground/75 dark:text-foreground/80 mt-1 whitespace-pre-line">
+                    {settings?.email || "Admissions: admissions@joyemhighschool.edu\nGeneral Info: info@joyemhighschool.edu"}
                   </p>
                 </div>
               </div>

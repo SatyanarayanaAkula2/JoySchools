@@ -10,18 +10,30 @@ function hashToken(token) {
 }
 
 export async function seedInitialAdmin() {
-  const adminCount = await Admin.countDocuments();
-  if (adminCount === 0) {
-    const seedUser = process.env.ADMIN_INIT_USERNAME || "admin";
-    const seedPass = process.env.ADMIN_INIT_PASSWORD || "Password123!";
+  const admin = await Admin.findOne({});
+  
+  const seedUser = process.env.ADMIN_INIT_USERNAME || "admin";
+  const seedPass = process.env.ADMIN_INIT_PASSWORD || "Password123!";
+  const seedQuestion = process.env.ADMIN_SECURITY_QUESTION || "what is adminId";
+  const seedAnswer = process.env.ADMIN_SECURITY_ANSWER || "joyschool@123";
+  const hashedAnswer = await bcrypt.hash(seedAnswer.toLowerCase().trim(), 10);
+
+  if (!admin) {
     const hashedPassword = await bcrypt.hash(seedPass, 10);
     await Admin.create({
       username: seedUser,
       password: hashedPassword,
       role: "admin",
+      securityQuestion: seedQuestion,
+      securityAnswer: hashedAnswer,
       refreshTokens: [],
     });
     console.log(`Initial admin account created automatically: ${seedUser}`);
+  } else {
+    admin.securityQuestion = seedQuestion;
+    admin.securityAnswer = hashedAnswer;
+    await admin.save();
+    console.log("Updated admin account security question and answer successfully.");
   }
 }
 
@@ -116,4 +128,32 @@ export async function revokeRefreshToken(token) {
   } catch (error) {
     console.error("Failed to revoke refresh token:", error);
   }
+}
+
+export async function getAdminSecurityQuestion(username) {
+  await seedInitialAdmin();
+  const admin = await Admin.findOne({ username });
+  if (!admin) {
+    throw new Error("Admin username not found");
+  }
+  return admin.securityQuestion;
+}
+
+export async function resetPasswordWithSecurityQuestion(username, answer, newPassword) {
+  await seedInitialAdmin();
+  const admin = await Admin.findOne({ username });
+  if (!admin) {
+    throw new Error("Admin username not found");
+  }
+
+  const isMatch = await bcrypt.compare(answer.toLowerCase().trim(), admin.securityAnswer);
+  if (!isMatch) {
+    throw new Error("Incorrect answer to security question");
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  admin.password = hashedPassword;
+  admin.refreshTokens = []; // Clear all active sessions
+  await admin.save();
+  return true;
 }

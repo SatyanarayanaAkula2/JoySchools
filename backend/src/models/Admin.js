@@ -20,6 +20,14 @@ const AdminSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    securityQuestion: {
+      type: String,
+      default: "What is your primary school name?",
+    },
+    securityAnswer: {
+      type: String,
+      required: [true, "Security answer is required"],
+    },
   },
   { timestamps: true }
 );
