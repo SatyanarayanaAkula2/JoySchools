@@ -80,7 +80,14 @@ export default function ClassesOffering() {
           {classesData.map((item, idx) => (
             <div
               key={idx}
-              className={`group p-6 rounded-3xl bg-gradient-to-br border flex flex-col justify-between transition-all duration-500 ease-out hover:scale-105 hover:-translate-y-2 cursor-pointer ${item.colorClass}`}
+              onDoubleClick={() => {
+                const el = document.getElementById("contact");
+                if (el) {
+                  el.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+              title="Double-click to open Admissions Enquiry"
+              className={`group p-6 rounded-3xl bg-gradient-to-br border flex flex-col justify-between transition-all duration-500 ease-out hover:scale-105 hover:-translate-y-2 cursor-pointer select-none ${item.colorClass}`}
             >
               {/* Top Image Box */}
               <div className="relative h-48 w-full overflow-hidden rounded-2xl mb-5 shadow-md border border-white/5">
