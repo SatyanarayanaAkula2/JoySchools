@@ -22,7 +22,7 @@ export default async function Home() {
   let settingsData = {};
 
   try {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+    const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_URL || "https://joyschools-p2xb.onrender.com").replace(/\/+$/, "");
     
     const [resFaculty, resGallery, resAchievements, resEvents, resMilestones, resSettings] = await Promise.all([
       fetch(`${backendUrl}/api/faculty`, { cache: "no-store" }).then((r) => r.json()),

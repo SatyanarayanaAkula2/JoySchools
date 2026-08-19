@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
+const rawBackendUrl =
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  process.env.BACKEND_URL ||
+  "https://joyschools-p2xb.onrender.com";
+
+const backendUrl = rawBackendUrl.replace(/\/+$/, "");
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -13,7 +20,6 @@ const nextConfig = {
     ],
   },
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:5000";
     return [
       {
         source: "/api/:path*",
@@ -21,7 +27,6 @@ const nextConfig = {
       },
     ];
   },
-
 };
 
 export default nextConfig;
