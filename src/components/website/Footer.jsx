@@ -19,8 +19,8 @@ export default function Footer({ settings }) {
         {/* Top footer grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 pb-12 border-b border-white/10">
           
-          {/* Column 1: School Branding (Col-span 4) */}
-          <div className="lg:col-span-4 space-y-6">
+          {/* Column 1: School Branding (Col-span 5) */}
+          <div className="lg:col-span-5 space-y-6">
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleScrollTo("hero")}>
               <div className="p-2 bg-white/10 rounded-lg text-accent">
                 <GraduationCap className="h-6 w-6" />
@@ -30,7 +30,7 @@ export default function Footer({ settings }) {
               </span>
             </div>
             
-            <p className="text-sm text-gray-300 leading-relaxed max-w-sm">
+            <p className="text-sm text-gray-300 leading-relaxed max-w-md">
               Dedicated to nurturing creative, responsible, and academically excellent individuals since 2011. Providing quality Nursery to 10th English Medium education under the State Board curriculum.
             </p>
 
@@ -101,8 +101,8 @@ export default function Footer({ settings }) {
             </div>
           </div>
 
-          {/* Column 2: Navigation Links (Col-span 2) */}
-          <div className="lg:col-span-2 space-y-4">
+          {/* Column 2: Navigation Links (Col-span 3) */}
+          <div className="lg:col-span-3 space-y-4">
             <h4 className="font-display text-sm font-bold uppercase tracking-wider text-accent">
               Quick Links
             </h4>
@@ -111,9 +111,10 @@ export default function Footer({ settings }) {
                 { name: "Home", id: "hero" },
                 { name: "About Us", id: "about" },
                 { name: "Academics", id: "classes" },
-                // { name: "Faculty", id: "faculty" },
-                { name: "Clubs & Activities", id: "activities" },
-                { name: "Milestones", id: "achievements" },
+                { name: "Holistic Development", id: "activities" },
+                { name: "Events", id: "events" },
+                { name: "Achievements", id: "achievements" },
+                { name: "Milestones", id: "milestones" },
                 { name: "Gallery", id: "gallery" },
                 { name: "Contact", id: "contact" },
               ].map((link, idx) => (
@@ -129,36 +130,8 @@ export default function Footer({ settings }) {
             </ul>
           </div>
 
-          {/* Column 3: Admissions Resources (Col-span 3) */}
-          <div className="lg:col-span-3 space-y-4">
-            <h4 className="font-display text-sm font-bold uppercase tracking-wider text-accent">
-              Admission Resources
-            </h4>
-            <ul className="space-y-2 text-sm text-gray-300">
-              {[
-                "Registration Process",
-                "School Fee Handbook (2026-27)",
-                "Age Eligibility Rules",
-                "Required Certificates",
-                "School Uniform Policy",
-                "Transport Route Details",
-                "Frequently Asked Questions",
-              ].map((item, idx) => (
-                <li key={idx}>
-                  <a
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
-                    className="hover:text-accent transition-colors duration-200"
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 4: Quick Contact & Newsletter (Col-span 3) */}
-          <div className="lg:col-span-3 space-y-4">
+          {/* Column 3: Quick Contact & Newsletter (Col-span 4) */}
+          <div className="lg:col-span-4 space-y-4">
             <h4 className="font-display text-sm font-bold uppercase tracking-wider text-accent">
               Contact Office
             </h4>
