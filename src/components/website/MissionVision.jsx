@@ -49,7 +49,7 @@ export default function MissionVision({ adminImage }) {
               {/* Floating Name Overlay */}
               <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 text-white">
                 <h4 className="text-xl font-bold font-display">Mrs. Suseela</h4>
-                <p className="text-xs text-accent font-semibold uppercase tracking-wider mt-1">Principal, JOY E.M. HIGH SCHOOL</p>
+                <p className="text-xs text-accent font-semibold uppercase tracking-wider mt-1">Principal, JOY E.M. SCHOOL</p>
               </div>
             </div>
 
@@ -72,23 +72,20 @@ export default function MissionVision({ adminImage }) {
 
             <div className="space-y-4 text-foreground/80 dark:text-foreground/90 text-base leading-relaxed font-medium">
               <p className="font-semibold text-primary dark:text-accent">
-                Welcome to JOY E.M. HIGH SCHOOL.
+                Welcome to JOY E.M. SCHOOL.
               </p>
               <p>
-                As the Administrator, it is my privilege to welcome you to our school community. We believe that true education goes beyond academics—it builds character, confidence, discipline, and a lifelong love for learning.
+                At JOY E.M. SCHOOL, education goes beyond textbooks. We focus on shaping curious minds, instilling strong ethical values, and empowering each student to explore their unique talents.
               </p>
               <p>
-                With a strong foundation from Nursery to Class 10, we are committed to providing quality education through engaging learning, creative activities, sports, and strong values. We encourage every child to discover their potential, work with dedication, and grow into a responsible and compassionate individual.
-              </p>
-              <p>
-                Together with parents, we strive to nurture confident, capable, and responsible citizens who are prepared to achieve excellence in life.
+                From foundational early learning to Class 10 academic excellence, our dedicated faculty and holistic environment prepare students to grow with confidence, discipline, and compassion.
               </p>
             </div>
 
             <div className="pt-6 border-t border-primary/10 flex items-center gap-4">
               <div>
                 <span className="block text-sm font-black text-primary dark:text-accent uppercase tracking-wider">Mrs. Suseela</span>
-                <span className="text-xs text-foreground/60 dark:text-foreground/75 font-semibold">Principal, JOY E.M. HIGH SCHOOL</span>
+                <span className="text-xs text-foreground/60 dark:text-foreground/75 font-semibold">Principal, JOY E.M. SCHOOL</span>
               </div>
             </div>
           </div>

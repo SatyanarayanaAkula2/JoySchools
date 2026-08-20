@@ -14,6 +14,7 @@ export default function AdminSettingsPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [officeHours, setOfficeHours] = useState("");
   
   const [facebook, setFacebook] = useState("");
   const [instagram, setInstagram] = useState("");
@@ -43,6 +44,7 @@ export default function AdminSettingsPage() {
           setEmail(s.email || "");
           setPhone(s.phone || "");
           setAddress(s.address || "");
+          setOfficeHours(s.officeHours || "Monday – Friday: 8:30 AM – 5:00 PM\nSaturday: 9:00 AM – 4:00 PM (Closed on Sundays)");
           setFacebook(s.facebook || "");
           setInstagram(s.instagram || "");
           setTwitter(s.twitter || "");
@@ -96,6 +98,7 @@ export default function AdminSettingsPage() {
       formData.append("email", email);
       formData.append("phone", phone);
       formData.append("address", address);
+      formData.append("officeHours", officeHours);
       formData.append("facebook", facebook);
       formData.append("instagram", instagram);
       formData.append("twitter", twitter);
@@ -131,6 +134,7 @@ export default function AdminSettingsPage() {
         setEmail(s.email || "");
         setPhone(s.phone || "");
         setAddress(s.address || "");
+        setOfficeHours(s.officeHours || "Monday – Friday: 8:30 AM – 5:00 PM\nSaturday: 9:00 AM – 4:00 PM (Closed on Sundays)");
         setFacebook(s.facebook || "");
         setInstagram(s.instagram || "");
         setTwitter(s.twitter || "");
@@ -325,14 +329,33 @@ export default function AdminSettingsPage() {
 
                     {/* Address */}
                     <div>
-                      <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-1">
-                        Campus Address (Use newlines to add lines)
-                      </label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500">
+                          Campus Address (Use newlines to add lines)
+                        </label>
+                        <span className="text-[11px] font-semibold text-accent">
+                          Updates Google Maps automatically
+                        </span>
+                      </div>
                       <textarea
                         rows={3}
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         placeholder="e.g. 108 Joy Hills Road, Sector 4,&#10;Bangalore, KA, India - 560034"
+                        className="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-850 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent text-slate-800 dark:text-white resize-none"
+                      />
+                    </div>
+
+                    {/* Office Hours */}
+                    <div>
+                      <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-1">
+                        Office Hours (Use newlines to format)
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={officeHours}
+                        onChange={(e) => setOfficeHours(e.target.value)}
+                        placeholder="e.g. Monday – Friday: 8:30 AM – 5:00 PM&#10;Saturday: 9:00 AM – 4:00 PM (Closed on Sundays)"
                         className="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-850 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent text-slate-800 dark:text-white resize-none"
                       />
                     </div>

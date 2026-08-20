@@ -1,6 +1,7 @@
 "use client";
 
 import { GraduationCap, Mail, Phone, MapPin, ArrowUp } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer({ settings }) {
   const handleScrollTo = (id) => {
@@ -21,17 +22,23 @@ export default function Footer({ settings }) {
           
           {/* Column 1: School Branding (Col-span 5) */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleScrollTo("hero")}>
-              <div className="p-2 bg-white/10 rounded-lg text-accent">
-                <GraduationCap className="h-6 w-6" />
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => handleScrollTo("hero")}>
+              <div className="relative h-10 w-10 rounded-xl overflow-hidden shadow-sm border border-white/20 bg-white p-0.5 shrink-0">
+                <Image
+                  src="/logo.png"
+                  alt="JOY E.M SCHOOL Logo"
+                  fill
+                  sizes="40px"
+                  className="object-contain"
+                />
               </div>
               <span className="font-display text-xl font-black tracking-tight uppercase">
-                 JOY E.M <span className="text-accent">HIGH SCHOOL</span>
+                 JOY E.M <span className="text-accent">SCHOOL</span>
               </span>
             </div>
             
             <p className="text-sm text-gray-300 leading-relaxed max-w-md">
-              Dedicated to nurturing creative, responsible, and academically excellent individuals since 2011. Providing quality Nursery to 10th English Medium education under the State Board curriculum.
+              Dedicated to nurturing creative, responsible, and academically excellent individuals since 2016. Providing quality Nursery to 10th English Medium education under the State Board curriculum.
             </p>
 
             {/* Social Icons */}
@@ -177,7 +184,7 @@ export default function Footer({ settings }) {
         {/* Bottom copyright area */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-4">
           <div>
-            &copy; {currentYear} JOY E.M HIGH SCHOOL. All rights reserved.
+            &copy; {currentYear} JOY E.M SCHOOL. All rights reserved.
           </div>
           
           <div className="flex gap-4">

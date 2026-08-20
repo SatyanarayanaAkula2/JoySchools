@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, GraduationCap } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,27 +19,18 @@ export default function Navbar() {
       }
 
       // Determine active section
-      const sections = [
-        "hero",
-        "about",
-        "classes",
-        "faculty",
-        "activities",
-        "achievements",
-        "gallery",
-        "contact",
-      ];
-      const scrollPosition = window.scrollY + 100; // Offset for navbar height
+      const sections = ["hero", "about", "classes", "activities", "events", "achievements", "gallery", "contact"];
+      const scrollPos = window.scrollY + 200;
 
       for (const section of sections) {
         const el = document.getElementById(section);
         if (el) {
           const top = el.offsetTop;
           const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
+          if (scrollPos >= top && scrollPos < top + height) {
             setActiveSection(section);
             break;
-            }
+          }
         }
       }
     };
@@ -60,8 +52,8 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 ${
-        scrolled ? "py-2 shadow-md" : "py-3"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-sm border-b border-slate-200/80 dark:border-slate-800/80 ${
+        scrolled ? "py-2 shadow-md" : "py-2.5 sm:py-3"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -69,22 +61,34 @@ export default function Navbar() {
           {/* Logo Section */}
           <a
             href="#hero"
-            className="flex items-center gap-2.5 group focus:outline-none"
+            className="flex items-center gap-2.5 sm:gap-3 group focus:outline-none"
             onClick={(e) => {
               e.preventDefault();
               setIsOpen(false);
               document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" });
             }}
           >
-            <div className="p-2 bg-blue-50 dark:bg-blue-950/50 rounded-xl group-hover:bg-blue-100 transition-all">
-              <GraduationCap className="h-6 w-6 sm:h-7 sm:w-7 text-[#1a56db] dark:text-[#38bdf8]" />
+            <div className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-xl overflow-hidden shadow-sm border border-slate-200/80 bg-white p-0.5 shrink-0 transition-transform group-hover:scale-105">
+              <Image
+                src="/logo.png"
+                alt="JOY E.M SCHOOL Logo"
+                fill
+                sizes="48px"
+                className="object-contain"
+                priority
+              />
             </div>
-            <div className="flex items-center tracking-tight">
-              <span className="font-display text-lg sm:text-xl font-black text-[#1a56db] dark:text-white uppercase">
-                JOY E.M
-              </span>
-              <span className="font-display text-lg sm:text-xl font-black text-[#0284c7] dark:text-[#38bdf8] ml-1.5 uppercase">
-                HIGH SCHOOL
+            <div className="flex flex-col text-left leading-tight">
+              <div className="flex items-center">
+                <span className="font-display text-lg sm:text-xl font-black text-[#1a56db] dark:text-white uppercase tracking-tight">
+                  JOY E.M
+                </span>
+                <span className="font-display text-lg sm:text-xl font-black text-[#0284c7] dark:text-[#38bdf8] ml-1.5 uppercase tracking-tight">
+                  SCHOOL
+                </span>
+              </div>
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-widest -mt-0.5">
+                SINCE 2016
               </span>
             </div>
           </a>

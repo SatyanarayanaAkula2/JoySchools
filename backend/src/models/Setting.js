@@ -17,7 +17,7 @@ const SettingSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      default: "info@joyemhighschool.edu",
+      default: "info@joyemschool.edu",
     },
     phone: {
       type: String,
@@ -26,6 +26,10 @@ const SettingSchema = new mongoose.Schema(
     address: {
       type: String,
       default: "108 Joy Hills Road, Sector 4, Bangalore, 56054",
+    },
+    officeHours: {
+      type: String,
+      default: "Monday – Friday: 8:30 AM – 5:00 PM\nSaturday: 9:00 AM – 4:00 PM (Closed on Sundays)",
     },
     facebook: {
       type: String,

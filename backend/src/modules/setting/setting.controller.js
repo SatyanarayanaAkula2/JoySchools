@@ -19,6 +19,7 @@ export async function editSettings(req, res) {
       email: req.body.email !== undefined ? req.body.email : current.email,
       phone: req.body.phone !== undefined ? req.body.phone : current.phone,
       address: req.body.address !== undefined ? req.body.address : current.address,
+      officeHours: req.body.officeHours !== undefined ? req.body.officeHours : current.officeHours,
       facebook: req.body.facebook !== undefined ? req.body.facebook : current.facebook,
       instagram: req.body.instagram !== undefined ? req.body.instagram : current.instagram,
       twitter: req.body.twitter !== undefined ? req.body.twitter : current.twitter,

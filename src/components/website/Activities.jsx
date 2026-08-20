@@ -106,7 +106,7 @@ export default function Activities({ initialActivities }) {
           </h2>
           <div className="h-1 w-16 bg-accent mx-auto rounded-full" />
           <p className="text-base sm:text-lg text-foreground/70 dark:text-foreground/85 leading-relaxed">
-            Education at JOY E.M HIGH SCHOOL goes beyond classroom walls. We offer a rich variety of extra-curricular activities designed to discover and nurture every child&apos;s talent.
+            Education at JOY E.M SCHOOL goes beyond classroom walls. We offer a rich variety of extra-curricular activities designed to discover and nurture every child&apos;s talent.
           </p>
         </div>
 

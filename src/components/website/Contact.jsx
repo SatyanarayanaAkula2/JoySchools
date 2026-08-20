@@ -119,26 +119,27 @@ export default function Contact({ settings }) {
                 </div>
                 <div>
                   <h4 className="font-bold text-sm text-primary dark:text-white uppercase tracking-wider">Office Hours</h4>
-                  <p className="text-sm text-foreground/75 dark:text-foreground/80 mt-1">
-                    Monday – Friday: 8:00 AM – 3:00 PM<br />
-                    Saturday: 8:00 AM – 12:00 PM (Closed on Sundays)
+                  <p className="text-sm text-foreground/75 dark:text-foreground/80 mt-1 whitespace-pre-line">
+                    {settings?.officeHours || "Monday – Friday: 8:30 AM – 5:00 PM\nSaturday: 9:00 AM – 4:00 PM (Closed on Sundays)"}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Google Map Place Holder */}
+            {/* Google Map Dynamic Embed */}
             <div className="relative aspect-[4/3] sm:aspect-[16/9] lg:aspect-[4/3] rounded-2xl overflow-hidden border border-primary/10 shadow-md">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.9265147814876!2d77.62193527589999!3d12.976594214751433!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1680d22c0389%3A0x7d028b030e427187!2sBengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                  settings?.address || "JOY E.M SCHOOL, Bangalore, India"
+                )}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen=""
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="JOY E.M HIGH SCHOOL Campus Location Map"
-                className="grayscale dark:invert contrast-[0.9]"
+                title="JOY E.M SCHOOL Campus Location Map"
+                className="contrast-[0.95]"
               ></iframe>
             </div>
           </div>
@@ -165,7 +166,7 @@ export default function Contact({ settings }) {
                     Form Submitted Successfully!
                   </h4>
                   <p className="text-sm text-emerald-700 dark:text-emerald-300 max-w-md mx-auto leading-relaxed">
-                    Thank you for your interest in JOY E.M HIGH SCHOOL. Our counseling department will review your details and connect with you via email or phone within 24 hours.
+                    Thank you for your interest in JOY E.M SCHOOL. Our counseling department will review your details and connect with you via email or phone within 24 hours.
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}

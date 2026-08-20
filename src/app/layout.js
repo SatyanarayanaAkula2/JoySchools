@@ -14,8 +14,8 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "JOY E.M HIGH SCHOOL | Nursery to Class 10 (State Board)",
-  description: "Welcome to JOY E.M HIGH SCHOOL, a premier English Medium K-10 educational institution offering holistic development, rich extra-curricular activities, expert faculty, and high academic standards under the State Board curriculum.",
+  title: "JOY E.M SCHOOL | Nursery to Class 10 (State Board)",
+  description: "Welcome to JOY E.M SCHOOL, a premier English Medium K-10 educational institution offering holistic development, rich extra-curricular activities, expert faculty, and high academic standards under the State Board curriculum since 2016.",
 };
 
 export default function RootLayout({ children }) {
