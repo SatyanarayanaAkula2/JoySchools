@@ -8,7 +8,7 @@ import { compressImage } from "@/utils/compressImage";
 export default function AchievementForm({ achievement, onClose, onSave }) {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Academic Excellence");
-  const [year, setYear] = useState("");
+  const [year, setYear] = useState("2016 - 2017");
   const [description, setDescription] = useState("");
   const [imagePreview, setImagePreview] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ export default function AchievementForm({ achievement, onClose, onSave }) {
     if (achievement) {
       setTitle(achievement.title || "");
       setCategory(achievement.category || "Academic Excellence");
-      setYear(achievement.year || "");
+      setYear(achievement.year || "2016 - 2017");
       setDescription(achievement.description || "");
       setImagePreview(achievement.image || "");
     }
@@ -64,7 +64,6 @@ export default function AchievementForm({ achievement, onClose, onSave }) {
     }
   };
 
-
   const categories = [
     "Academic Excellence",
     "Sports & Athletics",
@@ -72,6 +71,43 @@ export default function AchievementForm({ achievement, onClose, onSave }) {
     "Arts & Culture",
     "Other",
   ];
+
+  const academicYearOptions = [
+    "2016 - 2017",
+    "2017 - 2018",
+    "2018 - 2019",
+    "2019 - 2020",
+    "2020 - 2021",
+    "2021 - 2022",
+    "2022 - 2023",
+    "2023 - 2024",
+    "2024 - 2025",
+    "2025 - 2026",
+    "2026 - 2027",
+    "2027 - 2028",
+    "2028 - 2029",
+    "2029 - 2030",
+    "2016",
+    "2017",
+    "2018",
+    "2019",
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+    "2024",
+    "2025",
+    "2026",
+    "2027",
+    "2028",
+    "2029",
+    "2030",
+  ];
+
+  // If year has a custom value not in list, preserve it
+  const allYearOptions = academicYearOptions.includes(year)
+    ? academicYearOptions
+    : [year, ...academicYearOptions].filter(Boolean);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm">
@@ -125,48 +161,23 @@ export default function AchievementForm({ achievement, onClose, onSave }) {
               </select>
             </div>
 
-            {/* Year */}
+            {/* Year Dropdown Starting from 2016 */}
             <div>
               <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-1">
-                Academic Year *
+                Academic Year * (Since 2016)
               </label>
-              <input
-                type="text"
+              <select
                 required
-                list="achievement-years-list"
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
-                placeholder="e.g. 2025 - 2026 or 2025"
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-850 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent text-slate-800 dark:text-white"
-              />
-              <datalist id="achievement-years-list">
-                {[
-                  "2026 - 2027",
-                  "2025 - 2026",
-                  "2024 - 2025",
-                  "2023 - 2024",
-                  "2022 - 2023",
-                  "2021 - 2022",
-                  "2020 - 2021",
-                  "2019 - 2020",
-                  "2018 - 2019",
-                  "2017 - 2018",
-                  "2016 - 2017",
-                  "2026",
-                  "2025",
-                  "2024",
-                  "2023",
-                  "2022",
-                  "2021",
-                  "2020",
-                  "2019",
-                  "2018",
-                  "2017",
-                  "2016",
-                ].map((yr) => (
-                  <option key={yr} value={yr} />
+                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-850 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent text-slate-800 dark:text-white font-medium"
+              >
+                {allYearOptions.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
                 ))}
-              </datalist>
+              </select>
             </div>
 
             {/* Description */}
@@ -211,7 +222,7 @@ export default function AchievementForm({ achievement, onClose, onSave }) {
                 />
               </label>
               <p className="text-[10px] text-slate-450 mt-2">
-                Images display locally in your browser.
+                Images are automatically compressed for high performance.
               </p>
             </div>
           </div>
