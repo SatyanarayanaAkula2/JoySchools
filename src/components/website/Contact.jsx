@@ -39,69 +39,53 @@ export default function Contact({ settings }) {
     };
 
     try {
-      // 1. Send via direct FormSubmit API
-      const directRes = await fetch("https://formsubmit.co/ajax/joyschoolkkd@gmail.com", {
+      // 1. Post to Next.js API route
+      const apiPromise = fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      // 2. Direct browser dispatch to FormSubmit
+      const directPromise = fetch("https://formsubmit.co/ajax/joyschoolkkd@gmail.com", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
         body: JSON.stringify(payload),
+      }).catch((err) => console.log("Direct relay note:", err));
+
+      const [apiRes] = await Promise.all([apiPromise, directPromise]);
+
+      setIsSubmitted(true);
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        grade: "",
+        message: "",
       });
-
-      const directData = await directRes.json();
-
-      if (directRes.ok && directData.success !== "false") {
-        setIsSubmitted(true);
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          grade: "",
-          message: "",
-        });
-        return;
-      }
-
-      // 2. Fallback to backend API
-      const backendRes = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const backendData = await backendRes.json();
-
-      if (backendData.success) {
-        setIsSubmitted(true);
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          grade: "",
-          message: "",
-        });
-      } else {
-        setSubmitError(
-          backendData.error ||
-            "Unable to dispatch email automatically. Please email us directly at joyschoolkkd@gmail.com"
-        );
-      }
     } catch (err) {
       console.error("Submission error:", err);
-      // Even if network error, attempt secondary fallback
+      // Try direct fallback
       try {
-        await fetch("/api/contact", {
+        await fetch("https://formsubmit.co/ajax/joyschoolkkd@gmail.com", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(payload),
         });
         setIsSubmitted(true);
-      } catch {
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          grade: "",
+          message: "",
+        });
+      } catch (fallbackErr) {
         setSubmitError(
-          "Network error while sending. Please contact us directly at joyschoolkkd@gmail.com"
+          "Unable to send message. Please contact us directly at joyschoolkkd@gmail.com."
         );
       }
     } finally {
