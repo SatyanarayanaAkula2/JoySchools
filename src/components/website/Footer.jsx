@@ -154,7 +154,7 @@ export default function Footer({ settings }) {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-accent flex-shrink-0" />
-                <span className="whitespace-pre-line">{settings?.email ? settings.email.split("\n")[0] : "info@joyemhighschool.edu"}</span>
+                <span className="whitespace-pre-line">{settings?.email ? settings.email.split("\n")[0] : "joyschoolkkd@gmail.com"}</span>
               </li>
             </ul>
 

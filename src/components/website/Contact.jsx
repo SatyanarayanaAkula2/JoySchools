@@ -14,27 +14,101 @@ export default function Contact({ settings }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const [submitError, setSubmitError] = useState("");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError("");
 
-    // Mock API request delay
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        grade: "",
-        message: "",
+    try {
+      // 1. Send to internal backend endpoint
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
-    }, 1200);
+
+      const result = await response.json();
+
+      if (result.success) {
+        setIsSubmitted(true);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          grade: "",
+          message: "",
+        });
+      } else {
+        // 2. Direct fallback to FormSubmit relay if backend error occurs
+        const fallbackRes = await fetch("https://formsubmit.co/ajax/joyschoolkkd@gmail.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            _subject: `New Admission Inquiry from ${formData.name}`,
+            _template: "table",
+          }),
+        });
+
+        if (fallbackRes.ok) {
+          setIsSubmitted(true);
+          setFormData({
+            name: "",
+            email: "",
+            phone: "",
+            grade: "",
+            message: "",
+          });
+        } else {
+          setSubmitError(result.error || "Failed to submit. Please contact us directly at joyschoolkkd@gmail.com");
+        }
+      }
+    } catch (err) {
+      console.warn("API submission error, trying fallback relay:", err);
+      try {
+        const fallbackRes = await fetch("https://formsubmit.co/ajax/joyschoolkkd@gmail.com", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            _subject: `New Admission Inquiry from ${formData.name}`,
+            _template: "table",
+          }),
+        });
+
+        if (fallbackRes.ok) {
+          setIsSubmitted(true);
+          setFormData({
+            name: "",
+            email: "",
+            phone: "",
+            grade: "",
+            message: "",
+          });
+        } else {
+          setSubmitError("Failed to submit inquiry. Please reach out to joyschoolkkd@gmail.com directly.");
+        }
+      } catch (fallbackErr) {
+        setSubmitError("Network error. Please email us directly at joyschoolkkd@gmail.com.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -107,7 +181,7 @@ export default function Contact({ settings }) {
                 <div>
                   <h4 className="font-bold text-sm text-primary dark:text-white uppercase tracking-wider">Electronic Mail</h4>
                   <p className="text-sm text-foreground/75 dark:text-foreground/80 mt-1 whitespace-pre-line">
-                    {settings?.email || "Admissions: admissions@joyemhighschool.edu\nGeneral Info: info@joyemhighschool.edu"}
+                    {settings?.email || "joyschoolkkd@gmail.com"}
                   </p>
                 </div>
               </div>
@@ -177,6 +251,11 @@ export default function Contact({ settings }) {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
+                  {submitError && (
+                    <div className="p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl text-rose-700 dark:text-rose-300 text-xs font-semibold">
+                      {submitError}
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {/* Name */}
                     <div className="flex flex-col gap-1.5">

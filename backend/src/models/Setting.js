@@ -17,7 +17,7 @@ const SettingSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      default: "info@joyemschool.edu",
+      default: "joyschoolkkd@gmail.com",
     },
     phone: {
       type: String,

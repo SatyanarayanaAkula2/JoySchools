@@ -17,6 +17,7 @@ import galleryRoutes from "./modules/gallery/gallery.routes.js";
 import achievementRoutes from "./modules/achievement/achievement.routes.js";
 import milestoneRoutes from "./modules/milestone/milestone.routes.js";
 import settingRoutes from "./modules/setting/setting.routes.js";
+import contactRoutes from "./modules/contact/contact.routes.js";
 
 // Services
 import { seedInitialMilestones } from "./modules/milestone/milestone.service.js";
@@ -296,6 +297,11 @@ app.use(
 app.use(
     "/api/settings",
     settingRoutes
+);
+
+app.use(
+    "/api/contact",
+    contactRoutes
 );
 
 
