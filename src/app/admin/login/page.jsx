@@ -238,7 +238,7 @@ export default function AdminLoginPage() {
           </form>
 
           <div className="mt-6 text-center text-xs text-slate-500 leading-relaxed border-t border-slate-800/60 pt-6">
-            Default credentials are set via the environment config. Verify your server configuration before proceeding.
+            JOY E.M HIGH SCHOOL • Authorized Personnel Portal
           </div>
         </div>
       </div>

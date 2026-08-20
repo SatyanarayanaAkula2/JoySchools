@@ -49,7 +49,7 @@ export default function MissionVision({ adminImage }) {
               {/* Floating Name Overlay */}
               <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 text-white">
                 <h4 className="text-xl font-bold font-display">Mrs. Suseela</h4>
-                <p className="text-xs text-accent font-semibold uppercase tracking-wider mt-1">Principal, JOY E.M. SCHOOL</p>
+                <p className="text-xs text-accent font-semibold uppercase tracking-wider mt-1">Principal, JOY E.M. HIGH SCHOOL</p>
               </div>
             </div>
 
@@ -72,10 +72,10 @@ export default function MissionVision({ adminImage }) {
 
             <div className="space-y-4 text-foreground/80 dark:text-foreground/90 text-base leading-relaxed font-medium">
               <p className="font-semibold text-primary dark:text-accent">
-                Welcome to JOY E.M. SCHOOL.
+                Welcome to JOY E.M. HIGH SCHOOL.
               </p>
               <p>
-                At JOY E.M. SCHOOL, education goes beyond textbooks. We focus on shaping curious minds, instilling strong ethical values, and empowering each student to explore their unique talents.
+                At JOY E.M. HIGH SCHOOL, education goes beyond textbooks. We focus on shaping curious minds, instilling strong ethical values, and empowering each student to explore their unique talents.
               </p>
               <p>
                 From foundational early learning to Class 10 academic excellence, our dedicated faculty and holistic environment prepare students to grow with confidence, discipline, and compassion.
@@ -85,7 +85,7 @@ export default function MissionVision({ adminImage }) {
             <div className="pt-6 border-t border-primary/10 flex items-center gap-4">
               <div>
                 <span className="block text-sm font-black text-primary dark:text-accent uppercase tracking-wider">Mrs. Suseela</span>
-                <span className="text-xs text-foreground/60 dark:text-foreground/75 font-semibold">Principal, JOY E.M. SCHOOL</span>
+                <span className="text-xs text-foreground/60 dark:text-foreground/75 font-semibold">Principal, JOY E.M. HIGH SCHOOL</span>
               </div>
             </div>
           </div>

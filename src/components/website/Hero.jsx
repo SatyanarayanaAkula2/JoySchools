@@ -81,7 +81,7 @@ export default function Hero({ slideImages }) {
 
             {/* Subtitle / Description */}
             <p className="text-white/90 text-sm sm:text-base md:text-lg font-normal leading-relaxed max-w-xl drop-shadow">
-              Welcome to JOY E.M SCHOOL. Delivering quality Nursery to Class 10
+              Welcome to JOY E.M HIGH SCHOOL. Delivering quality Nursery to Class 10
               State Board English Medium education since 2016.
             </p>
 

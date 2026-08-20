@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import AdminLayoutWrapper from "@/components/admin/AdminLayoutWrapper";
 import { Loader2, Save, Globe, Phone, Image as ImageIcon, Upload } from "lucide-react";
 import Image from "next/image";
+import { compressImage } from "@/utils/compressImage";
 
 export default function AdminSettingsPage() {
   const [activeTab, setActiveTab] = useState("general");
@@ -68,23 +69,25 @@ export default function AdminSettingsPage() {
     loadSettings();
   }, []);
 
-  const handleAdminImageChange = (e) => {
+  const handleAdminImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setAdminImageFile(file);
-      setAdminImagePreview(URL.createObjectURL(file));
+      const optimized = await compressImage(file);
+      setAdminImageFile(optimized);
+      setAdminImagePreview(URL.createObjectURL(optimized));
     }
   };
 
-  const handleHeroSlideChange = (index, e) => {
+  const handleHeroSlideChange = async (index, e) => {
     const file = e.target.files[0];
     if (file) {
+      const optimized = await compressImage(file);
       const newFiles = [...heroSlideFiles];
-      newFiles[index] = file;
+      newFiles[index] = optimized;
       setHeroSlideFiles(newFiles);
 
       const newPreviews = [...heroSlidePreviews];
-      newPreviews[index] = URL.createObjectURL(file);
+      newPreviews[index] = URL.createObjectURL(optimized);
       setHeroSlidePreviews(newPreviews);
     }
   };

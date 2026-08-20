@@ -28,7 +28,7 @@ export default function Gallery({ initialItems }) {
       description: "Traditional classical dance recital performed during the school's Silver Jubilee.",
     },
     {
-      title: "JOY E.M SCHOOL Library",
+      title: "JOY E.M HIGH SCHOOL Library",
       album: "Campus Life",
       image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=600&q=80",
       description: "Our quiet reading room housing over 15,000 academic journals and fictional books.",

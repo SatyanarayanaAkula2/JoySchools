@@ -84,7 +84,7 @@ export default function Navbar() {
                   JOY E.M
                 </span>
                 <span className="font-display text-lg sm:text-xl font-black text-[#0284c7] dark:text-[#38bdf8] ml-1.5 uppercase tracking-tight">
-                  SCHOOL
+                  HIGH SCHOOL
                 </span>
               </div>
               <span className="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-widest -mt-0.5">

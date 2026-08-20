@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { X, Loader2, Upload } from "lucide-react";
 import Image from "next/image";
+import { compressImage } from "@/utils/compressImage";
 
 export default function GalleryUploader({ item, onClose, onSave }) {
   const [title, setTitle] = useState("");
@@ -25,11 +26,12 @@ export default function GalleryUploader({ item, onClose, onSave }) {
 
   const [imageFile, setImageFile] = useState(null);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImageFile(file);
-      const localUrl = URL.createObjectURL(file);
+      const optimized = await compressImage(file);
+      setImageFile(optimized);
+      const localUrl = URL.createObjectURL(optimized);
       setImagePreview(localUrl);
     }
   };

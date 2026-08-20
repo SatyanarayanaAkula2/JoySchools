@@ -33,7 +33,7 @@ export default function Footer({ settings }) {
                 />
               </div>
               <span className="font-display text-xl font-black tracking-tight uppercase">
-                 JOY E.M <span className="text-accent">SCHOOL</span>
+                 JOY E.M <span className="text-accent">HIGH SCHOOL</span>
               </span>
             </div>
             
@@ -184,7 +184,7 @@ export default function Footer({ settings }) {
         {/* Bottom copyright area */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-4">
           <div>
-            &copy; {currentYear} JOY E.M SCHOOL. All rights reserved.
+            &copy; {currentYear} JOY E.M HIGH SCHOOL. All rights reserved.
           </div>
           
           <div className="flex gap-4">

@@ -143,7 +143,7 @@ export default function ClassesOffering() {
               State Board Affiliation and Standards
             </h4>
             <p className="text-sm text-foreground/75 dark:text-foreground/85 leading-relaxed">
-              JOY E.M SCHOOL is fully recognized and affiliated with the State Board of Education, meeting all academic guidelines. We place special emphasis on continuous assessment, practical learning, and comprehensive holistic growth.
+              JOY E.M HIGH SCHOOL is fully recognized and affiliated with the State Board of Education, meeting all academic guidelines. We place special emphasis on continuous assessment, practical learning, and comprehensive holistic growth.
             </p>
           </div>
         </div>

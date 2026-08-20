@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { X, Loader2, Upload } from "lucide-react";
 import Image from "next/image";
+import { compressImage } from "@/utils/compressImage";
 
 export default function AchievementForm({ achievement, onClose, onSave }) {
   const [title, setTitle] = useState("");
@@ -26,11 +27,12 @@ export default function AchievementForm({ achievement, onClose, onSave }) {
 
   const [imageFile, setImageFile] = useState(null);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImageFile(file);
-      const localUrl = URL.createObjectURL(file);
+      const optimized = await compressImage(file);
+      setImageFile(optimized);
+      const localUrl = URL.createObjectURL(optimized);
       setImagePreview(localUrl);
     }
   };
@@ -131,11 +133,40 @@ export default function AchievementForm({ achievement, onClose, onSave }) {
               <input
                 type="text"
                 required
+                list="achievement-years-list"
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
-                placeholder="e.g. 2025 - 2026"
+                placeholder="e.g. 2025 - 2026 or 2025"
                 className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-850 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent text-slate-800 dark:text-white"
               />
+              <datalist id="achievement-years-list">
+                {[
+                  "2026 - 2027",
+                  "2025 - 2026",
+                  "2024 - 2025",
+                  "2023 - 2024",
+                  "2022 - 2023",
+                  "2021 - 2022",
+                  "2020 - 2021",
+                  "2019 - 2020",
+                  "2018 - 2019",
+                  "2017 - 2018",
+                  "2016 - 2017",
+                  "2026",
+                  "2025",
+                  "2024",
+                  "2023",
+                  "2022",
+                  "2021",
+                  "2020",
+                  "2019",
+                  "2018",
+                  "2017",
+                  "2016",
+                ].map((yr) => (
+                  <option key={yr} value={yr} />
+                ))}
+              </datalist>
             </div>
 
             {/* Description */}

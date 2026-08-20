@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { X, Loader2, Upload } from "lucide-react";
 import Image from "next/image";
+import { compressImage } from "@/utils/compressImage";
 
 export default function FacultyForm({ faculty, onClose, onSave }) {
   const [name, setName] = useState("");
@@ -29,12 +30,13 @@ export default function FacultyForm({ faculty, onClose, onSave }) {
     }
   }, [faculty]);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImageFile(file);
+      const optimized = await compressImage(file);
+      setImageFile(optimized);
       // Create local URL for browser render
-      const localUrl = URL.createObjectURL(file);
+      const localUrl = URL.createObjectURL(optimized);
       setImagePreview(localUrl);
     }
   };

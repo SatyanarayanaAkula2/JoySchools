@@ -166,7 +166,7 @@ export default function Contact({ settings }) {
                     Form Submitted Successfully!
                   </h4>
                   <p className="text-sm text-emerald-700 dark:text-emerald-300 max-w-md mx-auto leading-relaxed">
-                    Thank you for your interest in JOY E.M SCHOOL. Our counseling department will review your details and connect with you via email or phone within 24 hours.
+                    Thank you for your interest in JOY E.M HIGH SCHOOL. Our counseling department will review your details and connect with you via email or phone within 24 hours.
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}
