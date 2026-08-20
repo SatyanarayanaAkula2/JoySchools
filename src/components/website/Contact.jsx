@@ -26,9 +26,45 @@ export default function Contact({ settings }) {
     setIsSubmitting(true);
     setSubmitError("");
 
+    const payload = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone || "Not provided",
+      grade: formData.grade || "Not specified",
+      message: formData.message,
+      _subject: `New Admission Inquiry from ${formData.name}`,
+      _captcha: "false",
+      _template: "table",
+      _replyto: formData.email,
+    };
+
     try {
-      // 1. Send to internal backend endpoint
-      const response = await fetch("/api/contact", {
+      // 1. Send via direct FormSubmit API
+      const directRes = await fetch("https://formsubmit.co/ajax/joyschoolkkd@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const directData = await directRes.json();
+
+      if (directRes.ok && directData.success !== "false") {
+        setIsSubmitted(true);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          grade: "",
+          message: "",
+        });
+        return;
+      }
+
+      // 2. Fallback to backend API
+      const backendRes = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,9 +72,9 @@ export default function Contact({ settings }) {
         body: JSON.stringify(formData),
       });
 
-      const result = await response.json();
+      const backendData = await backendRes.json();
 
-      if (result.success) {
+      if (backendData.success) {
         setIsSubmitted(true);
         setFormData({
           name: "",
@@ -48,63 +84,25 @@ export default function Contact({ settings }) {
           message: "",
         });
       } else {
-        // 2. Direct fallback to FormSubmit relay if backend error occurs
-        const fallbackRes = await fetch("https://formsubmit.co/ajax/joyschoolkkd@gmail.com", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            ...formData,
-            _subject: `New Admission Inquiry from ${formData.name}`,
-            _template: "table",
-          }),
-        });
-
-        if (fallbackRes.ok) {
-          setIsSubmitted(true);
-          setFormData({
-            name: "",
-            email: "",
-            phone: "",
-            grade: "",
-            message: "",
-          });
-        } else {
-          setSubmitError(result.error || "Failed to submit. Please contact us directly at joyschoolkkd@gmail.com");
-        }
+        setSubmitError(
+          backendData.error ||
+            "Unable to dispatch email automatically. Please email us directly at joyschoolkkd@gmail.com"
+        );
       }
     } catch (err) {
-      console.warn("API submission error, trying fallback relay:", err);
+      console.error("Submission error:", err);
+      // Even if network error, attempt secondary fallback
       try {
-        const fallbackRes = await fetch("https://formsubmit.co/ajax/joyschoolkkd@gmail.com", {
+        await fetch("/api/contact", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            ...formData,
-            _subject: `New Admission Inquiry from ${formData.name}`,
-            _template: "table",
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
         });
-
-        if (fallbackRes.ok) {
-          setIsSubmitted(true);
-          setFormData({
-            name: "",
-            email: "",
-            phone: "",
-            grade: "",
-            message: "",
-          });
-        } else {
-          setSubmitError("Failed to submit inquiry. Please reach out to joyschoolkkd@gmail.com directly.");
-        }
-      } catch (fallbackErr) {
-        setSubmitError("Network error. Please email us directly at joyschoolkkd@gmail.com.");
+        setIsSubmitted(true);
+      } catch {
+        setSubmitError(
+          "Network error while sending. Please contact us directly at joyschoolkkd@gmail.com"
+        );
       }
     } finally {
       setIsSubmitting(false);
@@ -358,7 +356,7 @@ export default function Contact({ settings }) {
                     {isSubmitting ? (
                       <>
                         <div className="h-5 w-5 border-2 border-white dark:border-primary border-t-transparent rounded-full animate-spin" />
-                        <span>Sending message...</span>
+                        <span>Sending message to joyschoolkkd@gmail.com...</span>
                       </>
                     ) : (
                       <>
@@ -367,6 +365,22 @@ export default function Contact({ settings }) {
                       </>
                     )}
                   </button>
+
+                  <div className="text-center pt-1">
+                    <p className="text-xs text-foreground/60">
+                      Prefer to email directly?{" "}
+                      <a
+                        href={`mailto:joyschoolkkd@gmail.com?subject=${encodeURIComponent(
+                          formData.name ? `Admission Inquiry from ${formData.name}` : "Admission Inquiry - JOY E.M HIGH SCHOOL"
+                        )}&body=${encodeURIComponent(
+                          `Name: ${formData.name}\nPhone: ${formData.phone}\nGrade: ${formData.grade}\nMessage:\n${formData.message}`
+                        )}`}
+                        className="text-primary dark:text-accent font-semibold hover:underline"
+                      >
+                        joyschoolkkd@gmail.com
+                      </a>
+                    </p>
+                  </div>
                 </form>
               )}
             </div>

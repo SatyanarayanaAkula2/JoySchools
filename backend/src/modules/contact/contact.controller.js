@@ -93,6 +93,8 @@ export async function sendContactMessage(req, res) {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
+            Origin: "https://joy-schools.vercel.app",
+            Referer: "https://joy-schools.vercel.app/",
           },
           body: JSON.stringify({
             name,
@@ -101,7 +103,9 @@ export async function sendContactMessage(req, res) {
             grade: grade || "N/A",
             message: message || "N/A",
             _subject: emailSubject,
+            _captcha: "false",
             _template: "table",
+            _replyto: email,
           }),
         });
         emailSent = true;
