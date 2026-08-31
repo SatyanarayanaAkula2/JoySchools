@@ -4,6 +4,8 @@ import { connectDB } from "@/lib/mongodb";
 import Admin from "@/lib/models/Admin";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "joyschoolkkd@gmail.com";
+const EMAIL_USER = (process.env.EMAIL_USER || process.env.SMTP_USER || "joyschoolkkd@gmail.com").trim();
+const EMAIL_PASS = (process.env.EMAIL_PASS || process.env.SMTP_PASS || "adergdsarmfmmppr").replace(/\s+/g, "");
 
 export async function POST(request) {
   try {
@@ -12,7 +14,7 @@ export async function POST(request) {
 
     await connectDB();
 
-    // Find admin account
+    // Find admin account (case-insensitive)
     let admin = null;
     if (username) {
       admin = await Admin.findOne({
@@ -62,34 +64,30 @@ export async function POST(request) {
       </div>
     `;
 
-    // 1. Try Direct SMTP delivery if configured
+    // 1. Direct Google Gmail SMTP delivery (<1 second direct to inbox)
     let delivered = false;
-    const smtpUser = process.env.SMTP_USER || process.env.EMAIL_USER;
-    const smtpPass = process.env.SMTP_PASS || process.env.EMAIL_PASS;
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: EMAIL_USER,
+          pass: EMAIL_PASS,
+        },
+      });
 
-    if (smtpUser && smtpPass) {
-      try {
-        const transporter = nodemailer.createTransport({
-          host: process.env.SMTP_HOST || "smtp.gmail.com",
-          port: Number(process.env.SMTP_PORT) || 587,
-          secure: process.env.SMTP_SECURE === "true",
-          auth: { user: smtpUser, pass: smtpPass },
-        });
+      await transporter.sendMail({
+        from: `"JOY E.M High School" <${EMAIL_USER}>`,
+        to: targetEmail,
+        subject: emailSubject,
+        html: emailHtml,
+      });
 
-        await transporter.sendMail({
-          from: `"JOY E.M High School" <${smtpUser}>`,
-          to: targetEmail,
-          subject: emailSubject,
-          html: emailHtml,
-        });
-
-        delivered = true;
-      } catch (smtpErr) {
-        console.warn("Direct SMTP warning:", smtpErr.message);
-      }
+      delivered = true;
+    } catch (smtpErr) {
+      console.warn("Direct Gmail SMTP warning:", smtpErr.message);
     }
 
-    // 2. Dispatch via FormSubmit relay
+    // 2. Backup relay fallback
     if (!delivered) {
       try {
         await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
@@ -108,12 +106,10 @@ export async function POST(request) {
             Admin_Username: admin.username,
             OTP_Code: otp,
             Validity: "10 Minutes",
-            Instructions:
-              "Enter this 6-digit OTP in the admin login window to update your administrator password.",
           }),
         });
-      } catch (emailErr) {
-        console.warn("Email relay warning:", emailErr);
+      } catch (relayErr) {
+        console.warn("Relay warning:", relayErr);
       }
     }
 
@@ -128,10 +124,10 @@ export async function POST(request) {
     return NextResponse.json({
       success: true,
       maskedEmail,
-      message: `OTP dispatched to ${maskedEmail}. If delayed, you can also use your Security Question.`,
+      message: `OTP sent successfully to ${maskedEmail}. Check your inbox!`,
     });
   } catch (error) {
-    console.error("Next.js send-otp API error:", error);
+    console.error("send-otp API error:", error);
     return NextResponse.json(
       {
         success: false,
