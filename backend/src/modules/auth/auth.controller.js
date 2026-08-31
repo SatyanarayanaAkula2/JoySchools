@@ -11,7 +11,7 @@ export async function login(req, res) {
     res.cookie("admin_access_token", accessToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: "lax",
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 15 * 60 * 1000, // 15 mins in ms
       path: "/",
     });
@@ -20,7 +20,7 @@ export async function login(req, res) {
     res.cookie("admin_refresh_token", refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: "lax",
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms
       path: "/",
     });

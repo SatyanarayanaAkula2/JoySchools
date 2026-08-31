@@ -51,8 +51,15 @@ const allowedOrigins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 
+    // Custom domain
+    "https://www.joyschool.online",
+    "https://joyschool.online",
+    "http://www.joyschool.online",
+    "http://joyschool.online",
+
     // Your Vercel frontend
     "https://joy-schools-6g6n.vercel.app",
+    "https://joy-schools.vercel.app",
 
     // Environment variable
     process.env.FRONTEND_URL
@@ -73,80 +80,39 @@ app.use(
         origin: (origin, callback) => {
 
             // -----------------------------------------
-            // Allow requests without Origin
+            // Allow requests without Origin (e.g. server-to-server, curl, Postman)
             // -----------------------------------------
-            //
-            // Examples:
-            // - Postman
-            // - curl
-            // - server-to-server requests
-            // -----------------------------------------
-
             if (!origin) {
                 return callback(null, true);
             }
 
-
             // Remove trailing slash
             const normalizedOrigin = origin.replace(/\/$/, "");
 
-
             console.log("CORS Request From:", normalizedOrigin);
 
-
             // -----------------------------------------
-            // Exact origin match
+            // Check allowed origins or domain patterns
             // -----------------------------------------
+            const isAllowed =
+                allowedOrigins.includes(normalizedOrigin) ||
+                normalizedOrigin.includes("joyschool.online") ||
+                normalizedOrigin.endsWith(".vercel.app") ||
+                normalizedOrigin.includes("localhost") ||
+                normalizedOrigin.includes("127.0.0.1");
 
-            if (allowedOrigins.includes(normalizedOrigin)) {
-
-                console.log(
-                    "CORS Allowed:",
-                    normalizedOrigin
-                );
-
+            if (isAllowed) {
+                console.log("CORS Allowed:", normalizedOrigin);
                 return callback(null, true);
             }
-
-
-            // -----------------------------------------
-            // Allow Vercel deployments
-            // -----------------------------------------
-            //
-            // Example:
-            //
-            // https://joy-schools-abc123.vercel.app
-            //
-            // -----------------------------------------
-
-            if (
-                normalizedOrigin.startsWith("https://") &&
-                normalizedOrigin.endsWith(".vercel.app")
-            ) {
-
-                console.log(
-                    "Vercel Origin Allowed:",
-                    normalizedOrigin
-                );
-
-                return callback(null, true);
-            }
-
 
             // -----------------------------------------
             // Block unknown origins
             // -----------------------------------------
-
-            console.log(
-                "CORS BLOCKED:",
-                normalizedOrigin
-            );
-
+            console.log("CORS BLOCKED:", normalizedOrigin);
 
             return callback(
-                new Error(
-                    `CORS blocked origin: ${normalizedOrigin}`
-                ),
+                new Error(`CORS blocked origin: ${normalizedOrigin}`),
                 false
             );
         },
