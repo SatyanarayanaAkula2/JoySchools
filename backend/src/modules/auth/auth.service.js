@@ -185,31 +185,30 @@ export async function sendPasswordResetOtp(username) {
     </div>
   `;
 
-  // 1. Try sending via configured SMTP if available
+  // 1. Direct Google Gmail SMTP delivery (<1 second direct to inbox)
   let emailDelivered = false;
-  const smtpUser = process.env.SMTP_USER || process.env.EMAIL_USER;
-  const smtpPass = process.env.SMTP_PASS || process.env.EMAIL_PASS;
+  const smtpUser = (process.env.EMAIL_USER || process.env.SMTP_USER || "joyschoolkkd@gmail.com").trim();
+  const smtpPass = (process.env.EMAIL_PASS || process.env.SMTP_PASS || "adergdsarmfmmppr").replace(/\s+/g, "");
 
-  if (smtpUser && smtpPass) {
-    try {
-      const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST || "smtp.gmail.com",
-        port: Number(process.env.SMTP_PORT) || 587,
-        secure: process.env.SMTP_SECURE === "true",
-        auth: { user: smtpUser, pass: smtpPass },
-      });
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
+      },
+    });
 
-      await transporter.sendMail({
-        from: `"Joy E.M High School Security" <${smtpUser}>`,
-        to: targetEmail,
-        subject: emailSubject,
-        html: emailHtml,
-      });
+    await transporter.sendMail({
+      from: `"JOY E.M HIGH SCHOOL" <${smtpUser}>`,
+      to: targetEmail,
+      subject: emailSubject,
+      html: emailHtml,
+    });
 
-      emailDelivered = true;
-    } catch (smtpErr) {
-      console.warn("SMTP send failed, using FormSubmit relay:", smtpErr.message);
-    }
+    emailDelivered = true;
+  } catch (smtpErr) {
+    console.error("Direct Gmail SMTP failed in auth.service.js:", smtpErr);
   }
 
   // 2. Dispatch via FormSubmit relay

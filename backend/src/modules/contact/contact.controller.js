@@ -54,35 +54,31 @@ export async function sendContactMessage(req, res) {
       </div>
     `;
 
-    // 1. Try sending via configured SMTP / Nodemailer if credentials exist
+    // 1. Direct Gmail SMTP delivery (<1 second direct to inbox)
     let emailSent = false;
-    const smtpUser = process.env.SMTP_USER || process.env.EMAIL_USER;
-    const smtpPass = process.env.SMTP_PASS || process.env.EMAIL_PASS;
+    const smtpUser = (process.env.EMAIL_USER || process.env.SMTP_USER || "joyschoolkkd@gmail.com").trim();
+    const smtpPass = (process.env.EMAIL_PASS || process.env.SMTP_PASS || "adergdsarmfmmppr").replace(/\s+/g, "");
 
-    if (smtpUser && smtpPass) {
-      try {
-        const transporter = nodemailer.createTransport({
-          host: process.env.SMTP_HOST || "smtp.gmail.com",
-          port: Number(process.env.SMTP_PORT) || 587,
-          secure: process.env.SMTP_SECURE === "true",
-          auth: {
-            user: smtpUser,
-            pass: smtpPass,
-          },
-        });
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: smtpUser,
+          pass: smtpPass,
+        },
+      });
 
-        await transporter.sendMail({
-          from: `"Joy E.M High School Portal" <${smtpUser}>`,
-          to: RECIPIENT_EMAIL,
-          replyTo: email,
-          subject: emailSubject,
-          html: emailHtml,
-        });
+      await transporter.sendMail({
+        from: `"JOY E.M HIGH SCHOOL Inquiries" <${smtpUser}>`,
+        to: RECIPIENT_EMAIL,
+        replyTo: email,
+        subject: emailSubject,
+        html: emailHtml,
+      });
 
-        emailSent = true;
-      } catch (smtpErr) {
-        console.warn("SMTP send failed, attempting FormSubmit relay:", smtpErr.message);
-      }
+      emailSent = true;
+    } catch (smtpErr) {
+      console.warn("Direct Gmail SMTP failed in contact.controller.js:", smtpErr.message);
     }
 
     // 2. Relay via FormSubmit if SMTP is not configured or fails
