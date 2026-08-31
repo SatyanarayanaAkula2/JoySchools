@@ -1,4 +1,12 @@
-import { loginAdmin, revokeRefreshToken, handleRefreshToken, getAdminSecurityQuestion, resetPasswordWithSecurityQuestion } from "./auth.service.js";
+import {
+  loginAdmin,
+  revokeRefreshToken,
+  handleRefreshToken,
+  getAdminSecurityQuestion,
+  resetPasswordWithSecurityQuestion,
+  sendPasswordResetOtp,
+  verifyOtpAndResetPassword,
+} from "./auth.service.js";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -58,14 +66,16 @@ export async function refresh(req, res) {
 
     const result = await handleRefreshToken(refreshToken);
     if (!result) {
-      return res.status(401).json({ success: false, error: "Invalid or expired refresh token." });
+      res.clearCookie("admin_access_token", { path: "/" });
+      res.clearCookie("admin_refresh_token", { path: "/" });
+      return res.status(401).json({ success: false, error: "Invalid or expired session. Please log in again." });
     }
 
     // Set new Access Token cookie (15 minutes)
     res.cookie("admin_access_token", result.accessToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: "lax",
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 15 * 60 * 1000,
       path: "/",
     });
@@ -107,7 +117,7 @@ export async function refreshAndRedirect(req, res) {
     res.cookie("admin_access_token", result.accessToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: "lax",
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 15 * 60 * 1000,
       path: "/",
     });
@@ -116,6 +126,31 @@ export async function refreshAndRedirect(req, res) {
   } catch (error) {
     console.error("Refresh and redirect controller error:", error);
     return res.redirect("/admin/login");
+  }
+}
+
+export async function sendOtp(req, res) {
+  try {
+    const { username } = req.validatedBody;
+    const result = await sendPasswordResetOtp(username);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("sendOtp controller error:", error);
+    return res.status(400).json({ success: false, error: error.message || "Failed to send OTP to Gmail." });
+  }
+}
+
+export async function verifyOtpReset(req, res) {
+  try {
+    const { username, otp, newPassword } = req.validatedBody;
+    await verifyOtpAndResetPassword(username, otp, newPassword);
+    return res.status(200).json({
+      success: true,
+      message: "Password updated successfully. You can now log in with your new password.",
+    });
+  } catch (error) {
+    console.error("verifyOtpReset controller error:", error);
+    return res.status(400).json({ success: false, error: error.message || "Invalid or expired OTP." });
   }
 }
 
@@ -132,12 +167,17 @@ export async function retrieveSecurityQuestion(req, res) {
 
 export async function resetPassword(req, res) {
   try {
-    const { username, answer, newPassword } = req.validatedBody;
-    await resetPasswordWithSecurityQuestion(username, answer, newPassword);
+    const { username, answer, otp, newPassword } = req.validatedBody;
+    if (otp) {
+      await verifyOtpAndResetPassword(username, otp, newPassword);
+    } else if (answer) {
+      await resetPasswordWithSecurityQuestion(username, answer, newPassword);
+    } else {
+      return res.status(400).json({ success: false, error: "Either OTP or Security Answer is required." });
+    }
     return res.status(200).json({ success: true, message: "Password has been reset successfully." });
   } catch (error) {
     console.error("resetPassword controller error:", error);
     return res.status(400).json({ success: false, error: error.message || "Failed to reset password." });
   }
 }
-

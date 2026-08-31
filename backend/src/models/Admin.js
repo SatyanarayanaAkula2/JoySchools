@@ -20,13 +20,27 @@ const AdminSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    email: {
+      type: String,
+      default: "joyschoolkkd@gmail.com",
+      trim: true,
+      lowercase: true,
+    },
+    resetOtp: {
+      type: String,
+      default: null,
+    },
+    resetOtpExpiry: {
+      type: Date,
+      default: null,
+    },
     securityQuestion: {
       type: String,
       default: "What is your primary school name?",
     },
     securityAnswer: {
       type: String,
-      required: [true, "Security answer is required"],
+      default: "joyschool@123",
     },
   },
   { timestamps: true }
