@@ -140,9 +140,17 @@ export async function revokeRefreshToken(token) {
  */
 export async function sendPasswordResetOtp(username) {
   await seedInitialAdmin();
-  const admin = await Admin.findOne({ username });
+  let admin = null;
+  if (username && username.trim()) {
+    admin = await Admin.findOne({
+      username: { $regex: new RegExp(`^${username.trim()}$`, "i") },
+    });
+  }
   if (!admin) {
-    throw new Error("Admin username not found.");
+    admin = await Admin.findOne({});
+  }
+  if (!admin) {
+    throw new Error("Admin account not found in database.");
   }
 
   const targetEmail = admin.email || ADMIN_EMAIL;
@@ -251,9 +259,17 @@ export async function sendPasswordResetOtp(username) {
  */
 export async function verifyOtpAndResetPassword(username, otp, newPassword) {
   await seedInitialAdmin();
-  const admin = await Admin.findOne({ username });
+  let admin = null;
+  if (username && username.trim()) {
+    admin = await Admin.findOne({
+      username: { $regex: new RegExp(`^${username.trim()}$`, "i") },
+    });
+  }
   if (!admin) {
-    throw new Error("Admin username not found.");
+    admin = await Admin.findOne({});
+  }
+  if (!admin) {
+    throw new Error("Admin account not found in database.");
   }
 
   if (!admin.resetOtp || !admin.resetOtpExpiry) {

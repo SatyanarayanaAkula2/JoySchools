@@ -219,9 +219,14 @@ export default function AdminLoginPage() {
         body: JSON.stringify({ username: resetUsername.trim() }),
       });
 
-      const data = await res.json();
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (parseErr) {
+        data = { error: `Server returned HTTP ${res.status}. Server is waking up, please retry in 10 seconds.` };
+      }
 
-      if (data.success) {
+      if (res.ok && data && data.success) {
         setMaskedEmail(data.maskedEmail || "joyschoolkkd@gmail.com");
         setResetStep(2);
         setResendTimer(60); // 60s cooldown
@@ -229,10 +234,13 @@ export default function AdminLoginPage() {
           data.message || "OTP has been dispatched to your school Gmail address."
         );
       } else {
-        setResetError(data.error || "Failed to send OTP. Please try again.");
+        setResetError(
+          (data && data.error) ||
+            `Failed to send OTP (HTTP ${res.status}). Please wait a few seconds and try again.`
+        );
       }
     } catch (err) {
-      setResetError("Network error while requesting OTP.");
+      setResetError("Network connection error while requesting OTP. Please try again.");
     } finally {
       setResetLoading(false);
     }
@@ -277,9 +285,14 @@ export default function AdminLoginPage() {
         }),
       });
 
-      const data = await res.json();
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (parseErr) {
+        data = { error: `Server returned HTTP ${res.status}. Please retry.` };
+      }
 
-      if (data.success) {
+      if (res.ok && data && data.success) {
         setResetSuccess("Password updated successfully! You can now log in.");
         setUsername(resetUsername.trim());
         setPassword("");
